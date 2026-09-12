@@ -25,14 +25,29 @@ public:
 	void SetFitness(int fitness) { m_Fitness = fitness; }
 
 private:
-	Vector2 m_Position = { 200, 200 };
+	void HandleInput();
+	void ApplySteeringAndAcceleration();
+	void UpdatePosition();
+	void UpdateFitness();
+	void CheckBounds();
+	void UpdateRay();
+
+private:
+	Network brain = Network({ 5, 10, 10, 2 });
+	Vector2 m_Position = { 200.0f, 200.0f };
 	float m_Angle = 0.0f;
 	float m_Speed = 0.0f;
 	bool m_IsAlive = true;
 	int m_Fitness = 0;
-
 	bool m_IsManual;
 
-	Network brain = Network({ 5, 10, 10, 2 });
+	float m_Steering = 0.0f;
+	float m_Acceleration = 0.0f;
+
+	Vector2 m_RayEnd1 = { 0.0f, 0.0f };
+	Vector2 m_RayEnd2 = { 0.0f, 0.0f };
+	Vector2 m_RayEnd3 = { 0.0f, 0.0f };
+	Vector2 m_RayEnd4 = { 0.0f, 0.0f };
+	Vector2 m_RayEnd5 = { 0.0f, 0.0f };
 };
 
