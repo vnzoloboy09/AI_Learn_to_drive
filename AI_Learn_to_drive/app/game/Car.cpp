@@ -147,7 +147,7 @@ void Car::UpdateRay(Track& track) {
     m_RayEnd5 = { m_Position.x + cos(angle5) * (dist5 * MAX_RAY_RANGE), m_Position.y + sin(angle5) * (dist5 * MAX_RAY_RANGE) };
 }
 
-void Car::SetDefault() {
+void Car::Reset() {
     m_Position = START_POSITION;
     m_Angle = 0.0f;
     m_Speed = 0.0f;

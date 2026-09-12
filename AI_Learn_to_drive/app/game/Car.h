@@ -25,7 +25,7 @@ public:
 	void Update(float dt, Track& track);
 	void Render() const;
 
-	void SetDefault();
+	void Reset();
 
 	Vector2 GetPosition() const { return m_Position; }
 	void SetPosition(Vector2 position) { m_Position = position; }

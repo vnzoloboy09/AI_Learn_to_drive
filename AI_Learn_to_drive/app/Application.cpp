@@ -41,7 +41,6 @@ void Application::Update(float dt) {
 	for (auto& car : m_Cars) {
 		car.Update(dt, m_Track);
 	}
-	user.Update(dt, m_Track);
 }
 
 void Application::Render() const {
@@ -53,7 +52,12 @@ void Application::Render() const {
 	for (auto& car : m_Cars) {
 		car.Render();
 	}
-	user.Render();
 
 	EndDrawing();
+}
+
+void Application::Reset() {
+	for (auto& car : m_Cars) {
+		car.Reset();
+	}
 }

@@ -13,13 +13,14 @@ public:
 	void Update(float dt);
 	void Render() const;
 
+	void Reset();
+
 private:
 	const int m_ScreenWidth;
 	const int m_ScreenHeight;
 	bool m_Running;
 
 	std::vector<Car> m_Cars;
-	Car user = Car(true);
 
 	Track m_Track;
 };
