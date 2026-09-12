@@ -9,7 +9,7 @@ public:
 	Car(bool isManual);
 	~Car();
 
-	void Update();
+	void Update(float dt);
 	void Render() const;
 
 	void SetDefault();
@@ -26,8 +26,8 @@ public:
 
 private:
 	void HandleInput();
-	void ApplySteeringAndAcceleration();
-	void UpdatePosition();
+	void ApplySteeringAndAcceleration(float dt);
+	void UpdatePosition(float dt);
 	void UpdateFitness();
 	void CheckBounds();
 	void UpdateRay();

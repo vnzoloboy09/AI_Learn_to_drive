@@ -2,6 +2,12 @@
 
 #include "Utils.h"
 
+const float TURN_RATE = 2.5f;
+const float ACCELERATION_RATE = 400.0f;
+const float MAX_FORWARD_SPEED = 250.0f;
+const float MAX_REVERSE_SPEED = -80.0f;
+const float FRICTION = 0.93f;
+
 Car::Car(bool isMaual) 
     : m_IsManual(isMaual)
 {
@@ -12,14 +18,14 @@ Car::~Car() {
 
 }
 
-void Car::Update() {
+void Car::Update(float dt) {
     if (!m_IsAlive) 
         return;
 
     UpdateRay();
     HandleInput();
-    ApplySteeringAndAcceleration();
-    UpdatePosition();
+    ApplySteeringAndAcceleration(dt);
+    UpdatePosition(dt);
     UpdateFitness();
     CheckBounds();
 }
@@ -61,25 +67,31 @@ void Car::HandleInput() {
     m_Steering = steering;
 }
 
-void Car::ApplySteeringAndAcceleration() {
-    m_Angle += m_Steering * 0.04f * (m_Speed != 0 ? 1.0f : 0.0f);
+void Car::ApplySteeringAndAcceleration(float dt) {
+    if (m_Speed != 0.0f) {
+        m_Angle += m_Steering * TURN_RATE * dt;
+    }
 
     if (m_Acceleration > 0) {
-        m_Speed += 0.1f;
-        if (m_Speed > 4.0f) m_Speed = 4.0f;
+        m_Speed += ACCELERATION_RATE * dt;
+        if (m_Speed > MAX_FORWARD_SPEED) {
+            m_Speed = MAX_FORWARD_SPEED;
+        }
     }
     else if (m_Acceleration < 0) {
-        m_Speed -= 0.1f;
-        if (m_Speed < -1.5f) m_Speed = -1.5f;
+        m_Speed -= ACCELERATION_RATE * dt;
+        if (m_Speed < MAX_REVERSE_SPEED) {
+            m_Speed = MAX_REVERSE_SPEED;
+        }
     }
     else {
-        m_Speed *= 0.95f;
+        m_Speed *= std::pow(FRICTION, dt * 60.0f);
     }
 }
 
-void Car::UpdatePosition() {
-    m_Position.x += cos(m_Angle) * m_Speed;
-    m_Position.y += sin(m_Angle) * m_Speed;
+void Car::UpdatePosition(float dt) {
+    m_Position.x += cos(m_Angle) * m_Speed * dt;
+    m_Position.y += sin(m_Angle) * m_Speed * dt;
 }
 
 void Car::UpdateFitness() {
