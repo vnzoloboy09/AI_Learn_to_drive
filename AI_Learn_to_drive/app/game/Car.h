@@ -12,6 +12,7 @@ const float FRICTION = 0.93f;
 const float CAR_WIDTH = 30.0f;
 const float CAR_HEIGHT = 16.0f;
 const Vector2 START_POSITION = { 170, 470 };
+const float MAX_RAY_RANGE = 150.0f;
 
 class Track;
 

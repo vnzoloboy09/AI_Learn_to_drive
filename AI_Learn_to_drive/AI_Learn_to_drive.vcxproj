@@ -164,18 +164,22 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="app\Application.cpp" />
-    <ClCompile Include="app\car\Car.cpp" />
+    <ClCompile Include="app\game\Car.cpp" />
+    <ClCompile Include="app\game\Utils.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="app\model\Help.cpp" />
     <ClCompile Include="app\model\Layer.cpp" />
     <ClCompile Include="app\model\Network.cpp" />
+    <ClCompile Include="app\game\Track.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="app\Application.h" />
-    <ClInclude Include="app\car\Car.h" />
+    <ClInclude Include="app\game\Car.h" />
+    <ClInclude Include="app\game\Utils.h" />
     <ClInclude Include="app\model\Help.h" />
     <ClInclude Include="app\model\Layer.h" />
     <ClInclude Include="app\model\Network.h" />
+    <ClInclude Include="app\game\Track.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

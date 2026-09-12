@@ -1,5 +1,7 @@
 #include "Car.h"
 
+#include <raymath.h>
+
 Car::Car(bool isMaual) 
     : m_IsManual(isMaual)
 {
@@ -48,7 +50,13 @@ void Car::HandleInput() {
         if (IsKeyDown(KEY_D) || IsKeyDown(KEY_RIGHT)) steering = 1.0f;
     }
     else {
-        std::vector<float> inputs = { 1.0f, 1.0f, 1.0f, 1.0f, 1.0f };
+        std::vector<float> inputs = {
+            Vector2Distance(m_RayEnd1, m_Position) / MAX_RAY_RANGE,
+            Vector2Distance(m_RayEnd2, m_Position) / MAX_RAY_RANGE,
+            Vector2Distance(m_RayEnd3, m_Position) / MAX_RAY_RANGE,
+            Vector2Distance(m_RayEnd4, m_Position) / MAX_RAY_RANGE,
+            Vector2Distance(m_RayEnd5, m_Position) / MAX_RAY_RANGE,
+        };
         brain.Forward(inputs);
         std::vector<float> outputs = brain.GetOutput();
         steering = (float)outputs[0];
@@ -120,25 +128,23 @@ void Car::CheckBounds(Track& track) {
 }
 
 void Car::UpdateRay(Track& track) {
-    float maxSensorRange = 150.0f;
-
     float angle1 = m_Angle - 60.0f * DEG2RAD;
     float angle2 = m_Angle - 30.0f * DEG2RAD;
     float angle3 = m_Angle;
     float angle4 = m_Angle + 30.0f * DEG2RAD;
     float angle5 = m_Angle + 60.0f * DEG2RAD;
 
-    float dist1 = CastRay(m_Position, angle1, maxSensorRange, track);
-    float dist2 = CastRay(m_Position, angle2, maxSensorRange, track);
-    float dist3 = CastRay(m_Position, angle3, maxSensorRange, track);
-    float dist4 = CastRay(m_Position, angle4, maxSensorRange, track);
-    float dist5 = CastRay(m_Position, angle5, maxSensorRange, track);
+    float dist1 = CastRay(m_Position, angle1, MAX_RAY_RANGE, track);
+    float dist2 = CastRay(m_Position, angle2, MAX_RAY_RANGE, track);
+    float dist3 = CastRay(m_Position, angle3, MAX_RAY_RANGE, track);
+    float dist4 = CastRay(m_Position, angle4, MAX_RAY_RANGE, track);
+    float dist5 = CastRay(m_Position, angle5, MAX_RAY_RANGE, track);
 
-    m_RayEnd1 = { m_Position.x + cos(angle1) * (dist1 * maxSensorRange), m_Position.y + sin(angle1) * (dist1 * maxSensorRange) };
-    m_RayEnd2 = { m_Position.x + cos(angle2) * (dist2 * maxSensorRange), m_Position.y + sin(angle2) * (dist2 * maxSensorRange) };
-    m_RayEnd3 = { m_Position.x + cos(angle3) * (dist3 * maxSensorRange), m_Position.y + sin(angle3) * (dist3 * maxSensorRange) };
-    m_RayEnd4 = { m_Position.x + cos(angle4) * (dist4 * maxSensorRange), m_Position.y + sin(angle4) * (dist4 * maxSensorRange) };
-    m_RayEnd5 = { m_Position.x + cos(angle5) * (dist5 * maxSensorRange), m_Position.y + sin(angle5) * (dist5 * maxSensorRange) };
+    m_RayEnd1 = { m_Position.x + cos(angle1) * (dist1 * MAX_RAY_RANGE), m_Position.y + sin(angle1) * (dist1 * MAX_RAY_RANGE) };
+    m_RayEnd2 = { m_Position.x + cos(angle2) * (dist2 * MAX_RAY_RANGE), m_Position.y + sin(angle2) * (dist2 * MAX_RAY_RANGE) };
+    m_RayEnd3 = { m_Position.x + cos(angle3) * (dist3 * MAX_RAY_RANGE), m_Position.y + sin(angle3) * (dist3 * MAX_RAY_RANGE) };
+    m_RayEnd4 = { m_Position.x + cos(angle4) * (dist4 * MAX_RAY_RANGE), m_Position.y + sin(angle4) * (dist4 * MAX_RAY_RANGE) };
+    m_RayEnd5 = { m_Position.x + cos(angle5) * (dist5 * MAX_RAY_RANGE), m_Position.y + sin(angle5) * (dist5 * MAX_RAY_RANGE) };
 }
 
 void Car::SetDefault() {

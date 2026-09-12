@@ -30,7 +30,13 @@
     <ClCompile Include="app\Application.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="app\car\Car.cpp">
+    <ClCompile Include="app\game\Car.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="app\game\Utils.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="app\game\Track.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -47,7 +53,13 @@
     <ClInclude Include="app\Application.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="app\car\Car.h">
+    <ClInclude Include="app\game\Car.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="app\game\Utils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="app\game\Track.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

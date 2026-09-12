@@ -4,11 +4,11 @@
 
 int main()
 {
-	const int SCREEN_WIDTH = 800;
-	const int SCREEN_HEIGHT = 600;
+	const int SCREEN_WIDTH = 1280;
+	const int SCREEN_HEIGHT = 960;
 	const char* TITLE = "AI learn to drive";
 
-	Application app;
+	Application app(SCREEN_WIDTH, SCREEN_HEIGHT, TITLE);
 	app.Run();
 
     return 0;
