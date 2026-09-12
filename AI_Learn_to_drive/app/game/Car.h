@@ -5,8 +5,8 @@
 #include "Utils.h"
 
 const float TURN_RATE = 2.5f;
-const float ACCELERATION_RATE = 400.0f;
-const float MAX_FORWARD_SPEED = 250.0f;
+const float ACCELERATION_RATE = 380.0f;
+const float MAX_FORWARD_SPEED = 220.0f;
 const float MAX_REVERSE_SPEED = -80.0f;
 const float FRICTION = 0.93f;
 const float CAR_WIDTH = 30.0f;
