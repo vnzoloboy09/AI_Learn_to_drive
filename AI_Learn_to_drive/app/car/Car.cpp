@@ -40,19 +40,25 @@ void Car::Render() const {
 }
 
 void Car::HandleInput() {
+    float acceleration = 0.0f;
+    float steering = 0.0f;
+    
     if (m_IsManual) {
-        if (IsKeyDown(KEY_W) || IsKeyDown(KEY_UP))    m_Acceleration = 1.0f;
-        if (IsKeyDown(KEY_S) || IsKeyDown(KEY_DOWN))  m_Acceleration = -0.5f;
-        if (IsKeyDown(KEY_A) || IsKeyDown(KEY_LEFT))  m_Steering = -1.0f;
-        if (IsKeyDown(KEY_D) || IsKeyDown(KEY_RIGHT)) m_Steering = 1.0f;
+        if (IsKeyDown(KEY_W) || IsKeyDown(KEY_UP))    acceleration = 1.0f;
+        if (IsKeyDown(KEY_S) || IsKeyDown(KEY_DOWN))  acceleration = -0.5f;
+        if (IsKeyDown(KEY_A) || IsKeyDown(KEY_LEFT))  steering = -1.0f;
+        if (IsKeyDown(KEY_D) || IsKeyDown(KEY_RIGHT)) steering = 1.0f;
     }
     else {
         std::vector<float> inputs = { 1.0f, 1.0f, 1.0f, 1.0f, 1.0f };
         brain.Forward(inputs);
         std::vector<float> outputs = brain.GetOutput();
-        m_Steering = (float)outputs[0];
-        m_Acceleration = (float)outputs[1];
+        steering = (float)outputs[0];
+        acceleration = (float)outputs[1];
     }
+
+    m_Acceleration = acceleration;
+    m_Steering = steering;
 }
 
 void Car::ApplySteeringAndAcceleration() {
