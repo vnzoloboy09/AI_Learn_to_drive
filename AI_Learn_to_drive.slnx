@@ -1,0 +1,7 @@
+<Solution>
+  <Configurations>
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="AI_Learn_to_drive/AI_Learn_to_drive.vcxproj" Id="eff4c5f7-6071-494a-be19-9a6e05d2df9f" />
+</Solution>
