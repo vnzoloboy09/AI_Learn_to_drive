@@ -13,7 +13,7 @@ float CastRay(Vector2 carPos, float rayAngle, float maxRange, Track& track) {
             return currentDistance / maxRange;
         }
     }
-    return 1.0f;
+
     return 1.0f;
 }
 
