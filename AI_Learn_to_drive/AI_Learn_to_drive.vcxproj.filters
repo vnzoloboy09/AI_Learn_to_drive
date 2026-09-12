@@ -18,24 +18,36 @@
     <ClCompile Include="Main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="model\Help.cpp">
+    <ClCompile Include="app\model\Help.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="model\Layer.cpp">
+    <ClCompile Include="app\model\Layer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="model\Network.cpp">
+    <ClCompile Include="app\model\Network.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="app\Application.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="app\car\Car.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="model\Help.h">
+    <ClInclude Include="app\model\Help.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="model\Layer.h">
+    <ClInclude Include="app\model\Layer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="model\Network.h">
+    <ClInclude Include="app\model\Network.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="app\Application.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="app\car\Car.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
