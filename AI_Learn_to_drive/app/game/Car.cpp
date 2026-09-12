@@ -1,13 +1,5 @@
 #include "Car.h"
 
-#include "Utils.h"
-
-const float TURN_RATE = 2.5f;
-const float ACCELERATION_RATE = 400.0f;
-const float MAX_FORWARD_SPEED = 250.0f;
-const float MAX_REVERSE_SPEED = -80.0f;
-const float FRICTION = 0.93f;
-
 Car::Car(bool isMaual) 
     : m_IsManual(isMaual)
 {
@@ -18,31 +10,31 @@ Car::~Car() {
 
 }
 
-void Car::Update(float dt) {
+void Car::Update(float dt, Track& track) {
     if (!m_IsAlive) 
         return;
 
-    UpdateRay();
+    UpdateRay(track);
     HandleInput();
     ApplySteeringAndAcceleration(dt);
     UpdatePosition(dt);
     UpdateFitness();
-    CheckBounds();
+    CheckBounds(track);
 }
 
 void Car::Render() const {
     // Render car
     Color carColor = (m_IsAlive ? GREEN : RED);
-    Rectangle rect = { m_Position.x, m_Position.y, 30.0f, 16.0f };
+    Rectangle rect = { m_Position.x, m_Position.y, CAR_WIDTH, CAR_HEIGHT };
     Vector2 origin = { rect.width / 2.0f, rect.height / 2.0f };
     DrawRectanglePro(rect, origin, m_Angle * RAD2DEG, carColor);
 
     // Render ray
-    DrawLineV(m_Position, m_RayEnd1, YELLOW);
-    DrawLineV(m_Position, m_RayEnd2, YELLOW);
-    DrawLineV(m_Position, m_RayEnd3, YELLOW);
-    DrawLineV(m_Position, m_RayEnd4, YELLOW);
-    DrawLineV(m_Position, m_RayEnd5, YELLOW);
+    DrawLineV(m_Position, m_RayEnd1, BLUE);
+    DrawLineV(m_Position, m_RayEnd2, BLUE);
+    DrawLineV(m_Position, m_RayEnd3, BLUE);
+    DrawLineV(m_Position, m_RayEnd4, BLUE);
+    DrawLineV(m_Position, m_RayEnd5, BLUE);
 }
 
 void Car::HandleInput() {
@@ -98,13 +90,36 @@ void Car::UpdateFitness() {
     m_Fitness++; // TODO: change latter
 }
 
-void Car::CheckBounds() {
-    if (m_Position.x < 50 || m_Position.x > 750 || m_Position.y < 50 || m_Position.y > 550) {
+void Car::CheckBounds(Track& track) {
+    float hw = CAR_WIDTH / 2.0f;
+    float hh = CAR_HEIGHT / 2.0f;
+
+    Vector2 localCorners[4] = {
+        { -hw, -hh },
+        { hw, -hh },
+        { hw,  hh },
+        { -hw,  hh }
+    };
+
+    float c = cos(m_Angle);
+    float s = sin(m_Angle);
+
+    for (int i = 0; i < 4; ++i) {
+        float worldX = m_Position.x + (localCorners[i].x * c - localCorners[i].y * s);
+        float worldY = m_Position.y + (localCorners[i].x * s + localCorners[i].y * c);
+
+        if (track.IsWall(worldX, worldY)) {
+            m_IsAlive = false;
+            return;
+        }
+    }
+
+    if (track.IsWall(m_Position.x, m_Position.y)) {
         m_IsAlive = false;
     }
 }
 
-void Car::UpdateRay() {
+void Car::UpdateRay(Track& track) {
     float maxSensorRange = 150.0f;
 
     float angle1 = m_Angle - 60.0f * DEG2RAD;
@@ -113,11 +128,11 @@ void Car::UpdateRay() {
     float angle4 = m_Angle + 30.0f * DEG2RAD;
     float angle5 = m_Angle + 60.0f * DEG2RAD;
 
-    float dist1 = CastRay(m_Position, angle1, maxSensorRange);
-    float dist2 = CastRay(m_Position, angle2, maxSensorRange);
-    float dist3 = CastRay(m_Position, angle3, maxSensorRange);
-    float dist4 = CastRay(m_Position, angle4, maxSensorRange);
-    float dist5 = CastRay(m_Position, angle5, maxSensorRange);
+    float dist1 = CastRay(m_Position, angle1, maxSensorRange, track);
+    float dist2 = CastRay(m_Position, angle2, maxSensorRange, track);
+    float dist3 = CastRay(m_Position, angle3, maxSensorRange, track);
+    float dist4 = CastRay(m_Position, angle4, maxSensorRange, track);
+    float dist5 = CastRay(m_Position, angle5, maxSensorRange, track);
 
     m_RayEnd1 = { m_Position.x + cos(angle1) * (dist1 * maxSensorRange), m_Position.y + sin(angle1) * (dist1 * maxSensorRange) };
     m_RayEnd2 = { m_Position.x + cos(angle2) * (dist2 * maxSensorRange), m_Position.y + sin(angle2) * (dist2 * maxSensorRange) };
@@ -127,7 +142,7 @@ void Car::UpdateRay() {
 }
 
 void Car::SetDefault() {
-    m_Position = { 200, 200 };
+    m_Position = START_POSITION;
     m_Angle = 0.0f;
     m_Speed = 0.0f;
     m_IsAlive = true;

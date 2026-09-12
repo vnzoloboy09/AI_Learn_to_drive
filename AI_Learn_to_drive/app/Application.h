@@ -1,6 +1,7 @@
 #pragma once
 
-#include "car/Car.h"
+#include "game/Car.h"
+#include "game/Track.h"
 
 class Application
 {
@@ -18,5 +19,8 @@ private:
 	bool m_Running;
 
 	std::vector<Car> m_Cars;
+	Car user = Car(true);
+
+	Track m_Track;
 };
 
