@@ -161,11 +161,11 @@ void Car::UpdateRay(Track& track) {
     float dist4 = CastRay(m_Position, angle4, MAX_RAY_RANGE, track);
     float dist5 = CastRay(m_Position, angle5, MAX_RAY_RANGE, track);
 
-    m_RayEnd1 = { m_Position.x + cos(angle1) * (dist1 * MAX_RAY_RANGE), m_Position.y + sin(angle1) * (dist1 * MAX_RAY_RANGE) };
-    m_RayEnd2 = { m_Position.x + cos(angle2) * (dist2 * MAX_RAY_RANGE), m_Position.y + sin(angle2) * (dist2 * MAX_RAY_RANGE) };
-    m_RayEnd3 = { m_Position.x + cos(angle3) * (dist3 * MAX_RAY_RANGE), m_Position.y + sin(angle3) * (dist3 * MAX_RAY_RANGE) };
-    m_RayEnd4 = { m_Position.x + cos(angle4) * (dist4 * MAX_RAY_RANGE), m_Position.y + sin(angle4) * (dist4 * MAX_RAY_RANGE) };
-    m_RayEnd5 = { m_Position.x + cos(angle5) * (dist5 * MAX_RAY_RANGE), m_Position.y + sin(angle5) * (dist5 * MAX_RAY_RANGE) };
+    m_RayEnds[0] = { m_Position.x + cos(angle1) * (dist1 * MAX_RAY_RANGE), m_Position.y + sin(angle1) * (dist1 * MAX_RAY_RANGE) };
+    m_RayEnds[1] = { m_Position.x + cos(angle2) * (dist2 * MAX_RAY_RANGE), m_Position.y + sin(angle2) * (dist2 * MAX_RAY_RANGE) };
+    m_RayEnds[2] = { m_Position.x + cos(angle3) * (dist3 * MAX_RAY_RANGE), m_Position.y + sin(angle3) * (dist3 * MAX_RAY_RANGE) };
+    m_RayEnds[3] = { m_Position.x + cos(angle4) * (dist4 * MAX_RAY_RANGE), m_Position.y + sin(angle4) * (dist4 * MAX_RAY_RANGE) };
+    m_RayEnds[4] = { m_Position.x + cos(angle5) * (dist5 * MAX_RAY_RANGE), m_Position.y + sin(angle5) * (dist5 * MAX_RAY_RANGE) };
 }
 
 void Car::Reset(Vector2 spawnPoint, float spawnAngle) {
