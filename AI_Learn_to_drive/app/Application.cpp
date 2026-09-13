@@ -41,23 +41,29 @@ void Application::Run() {
 		}
 		
 		float dt = GetFrameTime();
+		HandleInput();
 		Update(dt);
 		Render();
 	}
 } 
 
-void Application::Update(float dt) {
+void Application::HandleInput() {
 	if (IsKeyDown(KEY_S)) {
 		m_Ga.SavePopulation("app/train/save", m_GenerationCount, m_Cars);
 	}
+}
 
+void Application::Update(float dt) {
+	m_Timer += dt;
 	for (auto& car : m_Cars) {
-		car.Update(dt, m_Track);
+		car.Update(dt, m_Timer, m_Track);
 	}
 	
-	if (IsAllDead()) {
+	if (IsAllDead() || m_Timer > 15.0f) {
 		m_GenerationCount++;
 		m_Ga.Evolve(m_Cars, START_POSITION, START_ANGLE);
+
+		m_Timer = 0.0f;
 	}
 }
 
@@ -70,6 +76,9 @@ void Application::Render() const {
 	for (auto& car : m_Cars) {
 		car.Render();
 	}
+
+	DrawText(TextFormat("Gen: %zu", (m_GenerationCount)), 10, 40, 20, DARKGRAY);
+	DrawText(TextFormat("Time: %.3f ms", m_Timer), 10, 70, 20, DARKGRAY);
 
 	EndDrawing();
 }

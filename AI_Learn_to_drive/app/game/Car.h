@@ -23,7 +23,7 @@ public:
 	Car(bool isManual);
 	~Car();
 
-	void Update(float dt, Track& track);
+	void Update(float dt, float timer, Track& track);
 	void Render() const;
 
 	void Reset(Vector2 spawnPoint = START_POSITION, float spawnAngle = START_ANGLE);
@@ -44,7 +44,7 @@ private:
 	void HandleInput();
 	void ApplySteeringAndAcceleration(float dt);
 	void UpdatePosition(float dt);
-	void UpdateFitness();
+	void UpdateFitness(float timer);
 	void CheckBounds(Track& track);
 	void UpdateRay(Track& track);
 
@@ -59,6 +59,8 @@ private:
 
 	float m_Steering = 0.0f;
 	float m_Acceleration = 0.0f;
+
+	float m_DistanceTravel = 0.0f;
 
 	Vector2 m_RayEnd1 = { 0.0f, 0.0f };
 	Vector2 m_RayEnd2 = { 0.0f, 0.0f };

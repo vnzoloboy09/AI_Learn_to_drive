@@ -11,6 +11,7 @@ public:
 	~Application();
 
 	void Run();
+	void HandleInput();
 	void Update(float dt);
 	void Render() const;
 
@@ -26,6 +27,7 @@ private:
 	std::vector<Car> m_Cars;
 	Genetic m_Ga;
 	size_t m_GenerationCount;
+	float m_Timer = 0.0f;
 
 	Track m_Track;
 };

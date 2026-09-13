@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <fstream>
+#include <iostream>
 
 Genetic::Genetic(float mutationRate, float mutationStrength, size_t elitismCount)
 	: m_MutationRate(mutationRate), m_MutationStrength(mutationStrength), m_ElitismCount(elitismCount)
@@ -102,12 +103,15 @@ void Genetic::SavePopulation(const std::string& filepath, size_t currentGenerati
 		metaFile << currentGeneration << "\n";
 		metaFile << population.size() << "\n";
 		metaFile.close();
+		std::cout << "Saved: " << filepath + "/meta.txt" << '\n';
 	}
 
 	for (size_t i = 0; i < population.size(); ++i) {
 		std::string path = filepath + "/car_" + std::to_string(i) + ".txt";
 		population[i].GetBrain().Save(path.c_str());
+		std::cout << "Saved: " + path << '\n';
 	}
+
 }
 
 bool Genetic::LoadPopulation(const std::string& filepath, size_t& outGeneration, 

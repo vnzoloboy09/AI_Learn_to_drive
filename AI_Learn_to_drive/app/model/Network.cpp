@@ -63,5 +63,4 @@ void Network::Save(const char* filepath) const {
 	}
 
 	out.close();
-	std::cout << "Model saved\n";
 }

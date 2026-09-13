@@ -12,15 +12,17 @@ Car::~Car() {
 
 }
 
-void Car::Update(float dt, Track& track) {
+void Car::Update(float dt, float timer, Track& track) {
     if (!m_IsAlive) 
         return;
+
+    timer += dt;
 
     UpdateRay(track);
     HandleInput();
     ApplySteeringAndAcceleration(dt);
     UpdatePosition(dt);
-    UpdateFitness();
+    UpdateFitness(timer);
     CheckBounds(track);
 }
 
@@ -90,12 +92,25 @@ void Car::ApplySteeringAndAcceleration(float dt) {
 }
 
 void Car::UpdatePosition(float dt) {
-    m_Position.x += cos(m_Angle) * m_Speed * dt;
-    m_Position.y += sin(m_Angle) * m_Speed * dt;
+    Vector2 newPos = {
+        m_Position.x + cos(m_Angle) * m_Speed * dt,
+        m_Position.y + sin(m_Angle) * m_Speed * dt
+    };
+
+    m_DistanceTravel = Vector2Distance(m_Position, newPos);
+    m_Position = newPos;
 }
 
-void Car::UpdateFitness() {
-    m_Fitness++; // TODO: change latter
+void Car::UpdateFitness(float timer) {
+    if (!m_IsAlive) {
+        return;
+    }
+
+    if (timer > 3.0f && m_DistanceTravel < 100.0f) {
+        m_Fitness -= 50.0f;
+    }
+
+    m_Fitness = m_DistanceTravel + timer;
 }
 
 void Car::CheckBounds(Track& track) {
@@ -153,4 +168,5 @@ void Car::Reset(Vector2 spawnPoint, float spawnAngle) {
     m_Speed = 0.0f;
     m_IsAlive = true;
     m_Fitness = 0;
+    m_DistanceTravel = 0.0f;
 }
