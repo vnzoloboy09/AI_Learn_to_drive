@@ -62,10 +62,6 @@ private:
 
 	float m_DistanceTravel = 0.0f;
 
-	Vector2 m_RayEnd1 = { 0.0f, 0.0f };
-	Vector2 m_RayEnd2 = { 0.0f, 0.0f };
-	Vector2 m_RayEnd3 = { 0.0f, 0.0f };
-	Vector2 m_RayEnd4 = { 0.0f, 0.0f };
-	Vector2 m_RayEnd5 = { 0.0f, 0.0f };
+	std::vector<Vector2> m_RayEnds;
 };
 

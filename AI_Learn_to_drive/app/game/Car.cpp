@@ -3,9 +3,15 @@
 #include <raymath.h>
 
 Car::Car(bool isMaual) 
-    : m_IsManual(isMaual)
+    : m_IsManual(isMaual), m_RayEnds(5)
 {
-
+    m_RayEnds = {
+        { 0.0f, 0.0f },
+        { 0.0f, 0.0f },
+        { 0.0f, 0.0f },
+        { 0.0f, 0.0f },
+        { 0.0f, 0.0f }
+    };
 }
 
 Car::~Car() {
@@ -34,11 +40,11 @@ void Car::Render() const {
     DrawRectanglePro(rect, origin, m_Angle * RAD2DEG, carColor);
 
     // Render ray
-    DrawLineV(m_Position, m_RayEnd1, BLUE);
-    DrawLineV(m_Position, m_RayEnd2, BLUE);
-    DrawLineV(m_Position, m_RayEnd3, BLUE);
-    DrawLineV(m_Position, m_RayEnd4, BLUE);
-    DrawLineV(m_Position, m_RayEnd5, BLUE);
+    DrawLineV(m_Position, m_RayEnds[0], BLUE);
+    DrawLineV(m_Position, m_RayEnds[1], BLUE);
+    DrawLineV(m_Position, m_RayEnds[2], BLUE);
+    DrawLineV(m_Position, m_RayEnds[3], BLUE);
+    DrawLineV(m_Position, m_RayEnds[4], BLUE);
 }
 
 void Car::HandleInput() {
@@ -53,11 +59,11 @@ void Car::HandleInput() {
     }
     else {
         std::vector<float> inputs = {
-            Vector2Distance(m_RayEnd1, m_Position) / MAX_RAY_RANGE,
-            Vector2Distance(m_RayEnd2, m_Position) / MAX_RAY_RANGE,
-            Vector2Distance(m_RayEnd3, m_Position) / MAX_RAY_RANGE,
-            Vector2Distance(m_RayEnd4, m_Position) / MAX_RAY_RANGE,
-            Vector2Distance(m_RayEnd5, m_Position) / MAX_RAY_RANGE,
+            Vector2Distance(m_RayEnds[0], m_Position) / MAX_RAY_RANGE,
+            Vector2Distance(m_RayEnds[1], m_Position) / MAX_RAY_RANGE,
+            Vector2Distance(m_RayEnds[2], m_Position) / MAX_RAY_RANGE,
+            Vector2Distance(m_RayEnds[3], m_Position) / MAX_RAY_RANGE,
+            Vector2Distance(m_RayEnds[4], m_Position) / MAX_RAY_RANGE,
         };
         m_Brain.Forward(inputs);
         std::vector<float> outputs = m_Brain.GetOutput();
