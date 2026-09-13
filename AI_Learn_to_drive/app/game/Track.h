@@ -7,7 +7,7 @@ class Track
 {
 public:
 	Track();
-	~Track() = default;
+	~Track();
 
 	void Load(const char* filePath);
 	void Unload();
@@ -16,10 +16,11 @@ public:
 	bool IsLastCheckpoint(size_t& currentCheckpointIndex) const;
 	void Render() const;
 
-private:
-	Image m_TrackImage;
-	Texture2D m_TrackTexture;
+public:
+	std::vector<Vector2> checkpoints;
+	Texture2D trackTexture;
+	Image trackImage;
 
-	std::vector<Vector2> m_Checkpoints;
+private:
 };
 

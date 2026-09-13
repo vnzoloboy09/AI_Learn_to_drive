@@ -8,7 +8,7 @@
 class Genetic
 {
 public:
-	Genetic(float mutationRate = 0.15f, float mutationStrength = 0.3f, size_t elitismCount = 2);
+	Genetic(float mutationRate = 0.15f, float mutationStrength = 0.3f, size_t elitismCount = 5);
 
 	void Evolve(std::vector<Car>& population, Vector2 spawnPoint, float spawnAngle);
 

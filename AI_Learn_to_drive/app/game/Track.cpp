@@ -8,56 +8,36 @@ Track::Track()
 
 }
 
+Track::~Track() {
+    Unload();
+}
+
 void Track::Load(const char* filePath) {
-    m_TrackImage = LoadImage(filePath);
-    m_TrackTexture = LoadTextureFromImage(m_TrackImage);
-
-    for (int y = 0; y < m_TrackImage.height; y++) {
-        for (int x = 0; x < m_TrackImage.width; x++) {
-            Color pixel = GetImageColor(m_TrackImage, x, y);
-
-            if (pixel.r <= 50 && pixel.g <= 50 && pixel.b >= 205) {
-                Vector2 newCp = { (float)x, (float)y };
-
-                bool tooClose = false;
-                for (const auto& cp : m_Checkpoints) {
-                    if (Vector2Distance(cp, newCp) < 20.0f) { 
-                        tooClose = true;
-                        break;
-                    }
-                }
-
-                if (!tooClose) {
-                    m_Checkpoints.push_back(newCp);
-                }
-            }
-        }
-    }
-
-    std::cout << "Load track with: " << m_Checkpoints.size() << " checkpoints\n";
+    trackImage = LoadImage(filePath);
+    trackTexture = LoadTextureFromImage(trackImage);
 }
 
 void Track::Unload() {
-    UnloadImage(m_TrackImage);
-    UnloadTexture(m_TrackTexture);
+    UnloadTexture(trackTexture);
+    UnloadImage(trackImage);
 }
 
 bool Track::IsWall(float x, float y) const {
-    if (x < 0 || x >= m_TrackImage.width || y < 0 || y >= m_TrackImage.height) {
+    if (x < 0 || x >= trackImage.width || y < 0 || y >= trackImage.height) {
         return true;
     }
-    Color pixelColor = GetImageColor(m_TrackImage, (int)x, (int)y);
+    Color pixelColor = GetImageColor(trackImage, (int)x, (int)y);
 
     return (pixelColor.r < 50 && pixelColor.g < 50 && pixelColor.b < 50);
 }
 
 bool Track::CheckCarPassedCheckpoint(Vector2 carPos, size_t& currentCheckpointIndex) const {
-    if (m_Checkpoints.empty()) {
+    if (checkpoints.empty()) {
         return false;
     }
     
-    size_t nextIndex = (currentCheckpointIndex + 1) % m_Checkpoints.size();
-    Vector2 targetCp = m_Checkpoints[nextIndex];
+    size_t nextIndex = (currentCheckpointIndex + 1) % checkpoints.size();
+    Vector2 targetCp = checkpoints[nextIndex];
 
     float distance = Vector2Distance(carPos, targetCp);
 
@@ -70,12 +50,9 @@ bool Track::CheckCarPassedCheckpoint(Vector2 carPos, size_t& currentCheckpointIn
 }
 
 bool Track::IsLastCheckpoint(size_t& currentCheckpointIndex) const {
-    return currentCheckpointIndex == m_Checkpoints.size() - 1;
+    return currentCheckpointIndex == checkpoints.size() - 1;
 }
 
 void Track::Render() const {
-    DrawTexture(m_TrackTexture, 0, 0, WHITE);
-    for (auto& checkpoint : m_Checkpoints) {
-        DrawCircle(static_cast<int>(checkpoint.x), static_cast<int>(checkpoint.y), 60.0f, YELLOW);
-    }
+    DrawTexture(trackTexture, 0, 0, WHITE);
 }
