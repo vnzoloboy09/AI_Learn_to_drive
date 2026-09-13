@@ -20,15 +20,26 @@ public:
 	void Reset();
 
 private:
+	void Train(float dt);
+	void RenderCar() const;
+	void RenderText() const;
+	void RenderButton() const;
+
+private:
 	const int m_ScreenWidth;
 	const int m_ScreenHeight;
 	bool m_Running;
 
 	std::vector<Car> m_Cars;
+	Car user = Car(true);
 	Genetic m_Ga;
 	size_t m_GenerationCount;
 	float m_Timer = 0.0f;
 
+	float m_BestScore = 0.0f;
+
 	Track m_Track;
+
+	Rectangle m_PauseButton = { 1100, 10, 160, 40 };
 };
 

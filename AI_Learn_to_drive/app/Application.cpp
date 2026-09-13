@@ -35,11 +35,7 @@ Application::~Application() {
 }
 
 void Application::Run() {
-	while (m_Running) {
-		if (WindowShouldClose()) {
-			m_Running = false;
-		}
-		
+	while (!WindowShouldClose()) {
 		float dt = GetFrameTime();
 		HandleInput();
 		Update(dt);
@@ -51,19 +47,21 @@ void Application::HandleInput() {
 	if (IsKeyDown(KEY_S)) {
 		m_Ga.SavePopulation("app/train/save", m_GenerationCount, m_Cars);
 	}
+	if (IsKeyDown(KEY_R)) {
+		user.Reset();
+	}
+
+	Vector2 mousePos = GetMousePosition();
+	if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+		if (CheckCollisionPointRec(mousePos, m_PauseButton)) {
+			m_Running = !m_Running;
+		}
+	}
 }
 
 void Application::Update(float dt) {
-	m_Timer += dt;
-	for (auto& car : m_Cars) {
-		car.Update(dt, m_Timer, m_Track);
-	}
-	
-	if (IsAllDead() || m_Timer > 15.0f) {
-		m_GenerationCount++;
-		m_Ga.Evolve(m_Cars, START_POSITION, START_ANGLE);
-
-		m_Timer = 0.0f;
+	if (m_Running) {
+		Train(dt);
 	}
 }
 
@@ -73,14 +71,50 @@ void Application::Render() const {
 
 	m_Track.Render();
 
+	RenderCar();
+	RenderText();
+	RenderButton();
+
+	EndDrawing();
+}
+
+void Application::Train(float dt) {
+	m_Timer += dt;
+	for (auto& car : m_Cars) {
+		car.Update(dt, m_Track);
+	}
+	user.Update(dt, m_Track);
+
+	if (IsAllDead() || m_Timer > 15.0f) {
+		m_BestScore = m_Cars[0].GetFitness();
+		std::cout << m_BestScore << '\n';
+		m_GenerationCount++;
+		m_Ga.Evolve(m_Cars, START_POSITION, START_ANGLE);
+
+		m_Timer = 0.0f;
+	}
+}
+
+void Application::RenderText() const {
+	DrawText(TextFormat("Gen: %zu", (m_GenerationCount)), 10, 40, 20, DARKGRAY);
+	DrawText(TextFormat("Time: %.3f ms", m_Timer), 10, 70, 20, DARKGRAY);
+	DrawText(TextFormat("Best: %.3f", m_BestScore), 10, 100, 20, DARKGRAY);
+}
+
+void Application::RenderCar() const {
 	for (auto& car : m_Cars) {
 		car.Render();
 	}
+	user.Render();
+}
 
-	DrawText(TextFormat("Gen: %zu", (m_GenerationCount)), 10, 40, 20, DARKGRAY);
-	DrawText(TextFormat("Time: %.3f ms", m_Timer), 10, 70, 20, DARKGRAY);
+void Application::RenderButton() const {
+	Color btnColor = m_Running ? DARKGRAY : DARKGREEN;
+	DrawRectangleRec(m_PauseButton, btnColor);
+	DrawRectangleLinesEx(m_PauseButton, 2, WHITE);
 
-	EndDrawing();
+	const char* btnText = m_Running ? "Pause Training" : "Resume Training";
+	DrawText(btnText, static_cast<int>(m_PauseButton.x) + 15, static_cast<int>(m_PauseButton.y) + 12, 14, WHITE);
 }
 
 void Application::Reset() {
