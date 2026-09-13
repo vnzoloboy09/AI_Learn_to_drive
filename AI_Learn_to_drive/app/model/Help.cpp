@@ -4,6 +4,7 @@
 #include <iostream>
 #include <random>
 #include <chrono>
+#include <cmath>
 
 std::vector<float> Softmax(const std::vector<float>& input) {
     size_t n = input.size();
@@ -30,6 +31,18 @@ std::vector<float> ReLU(const std::vector<float>& z){
     }
 
     return out;
+}
+
+std::vector<float> Tanh(const std::vector<float>& x) {
+    std::vector<float> out(x.size());
+    for (size_t i = 0; i < x.size(); i++) {
+        out[i] = std::tanh(x[i]);
+    }
+}
+
+double Tanh_derivative(double x) {
+    double t = std::tanh(x);
+    return 1.0 - t * t;
 }
 
 float RandomFloat(float a, float b) {

@@ -29,7 +29,7 @@ void Layer::Forward(const std::vector<float>& _inputs, bool isOutLayer) {
 			outputs = ReLU(z);
 		}
 		else {
-			outputs = Softmax(z);
+			outputs = Tanh(z);
 		}
 	}
 }
