@@ -130,10 +130,10 @@ void Car::UpdateFitness(Track& track) {
     }
 
     m_Fitness += (Vector2Distance(m_RayEnds[0], m_Position) + 
-        Vector2Distance(m_RayEnds[0], m_Position)) / MAX_RAY_RANGE;
+                  Vector2Distance(m_RayEnds[4], m_Position)) / MAX_RAY_RANGE;
     m_Fitness += (Vector2Distance(m_RayEnds[1], m_Position) + 
-        Vector2Distance(m_RayEnds[3], m_Position)) / MAX_RAY_RANGE * 5.0f;
-    m_Fitness += Vector2Distance(m_RayEnds[2], m_Position) / MAX_RAY_RANGE * 10.0f;
+                  Vector2Distance(m_RayEnds[3], m_Position)) / MAX_RAY_RANGE * 5.0f;
+    m_Fitness +=  Vector2Distance(m_RayEnds[2], m_Position) / MAX_RAY_RANGE * 10.0f;
 }
 
 void Car::CheckBounds(Track& track) {
@@ -190,6 +190,6 @@ void Car::Reset(Vector2 spawnPoint, float spawnAngle) {
     m_Angle = spawnAngle;
     m_Speed = 0.0f;
     m_IsAlive = true;
-    m_Fitness = 0;
+    m_Fitness = 0.0f;
     m_DistanceTravel = 0.0f;
 }
