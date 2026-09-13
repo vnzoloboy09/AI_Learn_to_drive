@@ -40,11 +40,11 @@ void Car::Render() const {
     DrawRectanglePro(rect, origin, m_Angle * RAD2DEG, carColor);
 
     // Render ray
-    DrawLineV(m_Position, m_RayEnds[0], BLUE);
-    DrawLineV(m_Position, m_RayEnds[1], BLUE);
-    DrawLineV(m_Position, m_RayEnds[2], BLUE);
-    DrawLineV(m_Position, m_RayEnds[3], BLUE);
-    DrawLineV(m_Position, m_RayEnds[4], BLUE);
+    //DrawLineV(m_Position, m_RayEnds[0], BLUE);
+    //DrawLineV(m_Position, m_RayEnds[1], BLUE);
+    //DrawLineV(m_Position, m_RayEnds[2], BLUE);
+    //DrawLineV(m_Position, m_RayEnds[3], BLUE);
+    //DrawLineV(m_Position, m_RayEnds[4], BLUE);
 }
 
 void Car::HandleInput() {
@@ -117,6 +117,11 @@ void Car::UpdateFitness(float timer) {
     }
 
     m_Fitness = m_DistanceTravel + timer;
+    m_Fitness += (Vector2Distance(m_RayEnds[0], m_Position) + 
+        Vector2Distance(m_RayEnds[0], m_Position)) / MAX_RAY_RANGE;
+    m_Fitness += (Vector2Distance(m_RayEnds[1], m_Position) + 
+        Vector2Distance(m_RayEnds[3], m_Position)) / MAX_RAY_RANGE * 5.0f;
+    m_Fitness += Vector2Distance(m_RayEnds[2], m_Position) / MAX_RAY_RANGE * 10.0f;
 }
 
 void Car::CheckBounds(Track& track) {

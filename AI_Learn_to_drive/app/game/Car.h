@@ -35,8 +35,8 @@ public:
 	float GetSpeed() const { return m_Speed; }
 	void SetSpeed(float speed) { m_Speed = speed; }
 	bool IsAlive() const { return m_IsAlive; }
-	int GetFitness() const { return m_Fitness; }
-	void SetFitness(int fitness) { m_Fitness = fitness; }
+	float GetFitness() const { return m_Fitness; }
+	void SetFitness(float fitness) { m_Fitness = fitness; }
 	Network GetBrain() const { return m_Brain; }
 	void SetBrain(Network brain) { m_Brain = brain; }
 
@@ -54,7 +54,7 @@ private:
 	float m_Angle = START_ANGLE;
 	float m_Speed = 0.0f;
 	bool m_IsAlive = true;
-	int m_Fitness = 0;
+	float m_Fitness = 0.0f;
 	bool m_IsManual;
 
 	float m_Steering = 0.0f;
