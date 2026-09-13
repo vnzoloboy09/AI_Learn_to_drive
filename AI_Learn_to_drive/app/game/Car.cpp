@@ -103,7 +103,7 @@ void Car::UpdatePosition(float dt) {
         m_Position.y + sin(m_Angle) * m_Speed * dt
     };
 
-    m_DistanceTravel = Vector2Distance(m_Position, newPos);
+    m_DistanceTravel += Vector2Distance(m_Position, newPos);
     m_Position = newPos;
 }
 
@@ -112,11 +112,13 @@ void Car::UpdateFitness(float timer) {
         return;
     }
 
-    if (timer > 3.0f && m_DistanceTravel < 100.0f) {
-        m_Fitness -= 50.0f;
+    if (timer > 3.0f && m_DistanceTravel < 1.5f) {
+        m_Fitness -= 500.0f;
+        m_IsAlive = false;
+        return;
     }
 
-    m_Fitness = m_DistanceTravel + timer;
+    m_Fitness = m_DistanceTravel * 10;
     m_Fitness += (Vector2Distance(m_RayEnds[0], m_Position) + 
         Vector2Distance(m_RayEnds[0], m_Position)) / MAX_RAY_RANGE;
     m_Fitness += (Vector2Distance(m_RayEnds[1], m_Position) + 

@@ -40,6 +40,8 @@ public:
 	Network GetBrain() const { return m_Brain; }
 	void SetBrain(Network brain) { m_Brain = brain; }
 
+	float GetDistanceTravel() const { return m_DistanceTravel; }
+
 private:
 	void HandleInput();
 	void ApplySteeringAndAcceleration(float dt);
