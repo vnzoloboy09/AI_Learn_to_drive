@@ -4,7 +4,7 @@
 #include <fstream>
 
 Genetic::Genetic(float mutationRate, float mutationStrength, size_t elitismCount)
-	: m_MutationRate(muatationRate), m_MutationStrength(mutationStrength), m_ElitismCount(elitismCount)
+	: m_MutationRate(mutationRate), m_MutationStrength(mutationStrength), m_ElitismCount(elitismCount)
 { }
 
 void Genetic::Evolve(std::vector<Car>& population, Vector2 spawnPoint, float spawnAngle) {
