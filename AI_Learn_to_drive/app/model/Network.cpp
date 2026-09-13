@@ -11,10 +11,10 @@ Network::Network(const std::vector<size_t>& topology) {
 	}
 }
 
-Network::Network(const char* filename) {
-	std::ifstream in(filename, std::ios::binary);
+Network::Network(const char* filepath) {
+	std::ifstream in(filepath, std::ios::binary);
 	if (!in.is_open()) {
-		std::cerr << "Cant open file: " << filename << '\n';
+		std::cerr << "Cant open file: " << filepath << '\n';
 		return;
 	}
 
@@ -44,10 +44,10 @@ void Network::Forward(const std::vector<float>& inputs) {
 	m_Layers.back().Forward(m_Layers[m_Layers.size() - 2].outputs, true);
 }
 
-void Network::Save(const char* filename) const {
-	std::ofstream out(filename, std::ios::binary);
+void Network::Save(const char* filepath) const {
+	std::ofstream out(filepath, std::ios::binary);
 	if (!out.is_open()) {
-		std::cerr << "Cant open file: " << filename << '\n';
+		std::cerr << "Cant open file: " << filepath << '\n';
 		return;
 	}
 

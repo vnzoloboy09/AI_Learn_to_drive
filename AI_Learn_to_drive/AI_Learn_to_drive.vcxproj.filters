@@ -39,6 +39,9 @@
     <ClCompile Include="app\game\Track.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="app\train\Genetic.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="app\model\Help.h">
@@ -60,6 +63,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="app\game\Track.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="app\train\Genetic.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

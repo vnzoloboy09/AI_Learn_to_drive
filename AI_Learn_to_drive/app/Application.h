@@ -2,6 +2,7 @@
 
 #include "game/Car.h"
 #include "game/Track.h"
+#include "train/Genetic.h"
 
 class Application
 {
@@ -13,6 +14,8 @@ public:
 	void Update(float dt);
 	void Render() const;
 
+	bool IsAllDead();
+
 	void Reset();
 
 private:
@@ -21,6 +24,8 @@ private:
 	bool m_Running;
 
 	std::vector<Car> m_Cars;
+	Genetic m_Ga;
+	size_t m_GenerationCount;
 
 	Track m_Track;
 };

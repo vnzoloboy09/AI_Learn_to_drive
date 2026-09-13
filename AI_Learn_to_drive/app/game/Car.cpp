@@ -57,8 +57,8 @@ void Car::HandleInput() {
             Vector2Distance(m_RayEnd4, m_Position) / MAX_RAY_RANGE,
             Vector2Distance(m_RayEnd5, m_Position) / MAX_RAY_RANGE,
         };
-        brain.Forward(inputs);
-        std::vector<float> outputs = brain.GetOutput();
+        m_Brain.Forward(inputs);
+        std::vector<float> outputs = m_Brain.GetOutput();
         steering = (float)outputs[0];
         acceleration = (float)outputs[1];
     }
@@ -147,9 +147,9 @@ void Car::UpdateRay(Track& track) {
     m_RayEnd5 = { m_Position.x + cos(angle5) * (dist5 * MAX_RAY_RANGE), m_Position.y + sin(angle5) * (dist5 * MAX_RAY_RANGE) };
 }
 
-void Car::Reset() {
-    m_Position = START_POSITION;
-    m_Angle = 0.0f;
+void Car::Reset(Vector2 spawnPoint, float spawnAngle) {
+    m_Position = spawnPoint;
+    m_Angle = spawnAngle;
     m_Speed = 0.0f;
     m_IsAlive = true;
     m_Fitness = 0;

@@ -16,7 +16,16 @@ Application::Application(int screenWidth, int screenHeight, const char* title)
 		m_Cars.emplace_back(false);
 	}
 
-	m_Track.Load("app/game/track.png");
+	bool loaded = m_Ga.LoadPopulation("app/train/save", m_GenerationCount, m_Cars, START_POSITION, START_ANGLE);
+
+	if (!loaded) {
+		m_GenerationCount = 1;
+		for (int i = 0; i < 100; ++i) {
+			m_Cars.emplace_back(false);
+		}
+	}
+
+	m_Track.Load("app/game/assets/track.png");
 
 	m_Running = true;
 }
@@ -38,8 +47,17 @@ void Application::Run() {
 } 
 
 void Application::Update(float dt) {
+	if (IsKeyDown(KEY_S)) {
+		m_Ga.SavePopulation("app/train/save", m_GenerationCount, m_Cars);
+	}
+
 	for (auto& car : m_Cars) {
 		car.Update(dt, m_Track);
+	}
+	
+	if (IsAllDead()) {
+		m_GenerationCount++;
+		m_Ga.Evolve(m_Cars, START_POSITION, START_ANGLE);
 	}
 }
 
@@ -60,4 +78,13 @@ void Application::Reset() {
 	for (auto& car : m_Cars) {
 		car.Reset();
 	}
+}
+
+bool Application::IsAllDead() {
+	for (auto& car : m_Cars) {
+		if (car.IsAlive()) {
+			return false;
+		}
+	}
+	return true;
 }
