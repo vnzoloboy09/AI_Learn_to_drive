@@ -46,7 +46,7 @@ private:
 	void HandleInput();
 	void ApplySteeringAndAcceleration(float dt);
 	void UpdatePosition(float dt);
-	void UpdateFitness(Track& track);
+	void UpdateFitness(float dt, Track& track);
 	void CheckBounds(Track& track);
 	void UpdateRay(Track& track);
 

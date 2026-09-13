@@ -61,7 +61,7 @@ bool Track::CheckCarPassedCheckpoint(Vector2 carPos, size_t& currentCheckpointIn
 
     float distance = Vector2Distance(carPos, targetCp);
 
-    if (distance < 60.0f) {
+    if (distance <= 60.0f) {
         currentCheckpointIndex = nextIndex;
         return true;
     }
@@ -76,6 +76,6 @@ bool Track::IsLastCheckpoint(size_t& currentCheckpointIndex) const {
 void Track::Render() const {
     DrawTexture(m_TrackTexture, 0, 0, WHITE);
     for (auto& checkpoint : m_Checkpoints) {
-        DrawCircle(static_cast<int>(checkpoint.x), static_cast<int>(checkpoint.y), 50.0f, YELLOW);
+        DrawCircle(static_cast<int>(checkpoint.x), static_cast<int>(checkpoint.y), 60.0f, YELLOW);
     }
 }

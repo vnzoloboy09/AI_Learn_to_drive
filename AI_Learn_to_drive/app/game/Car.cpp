@@ -2,7 +2,7 @@
 
 #include <raymath.h>
 
-Car::Car(bool isMaual) 
+Car::Car(bool isMaual = false) 
     : m_IsManual(isMaual), m_RayEnds(5)
 {
     m_RayEnds = {
@@ -28,8 +28,11 @@ void Car::Update(float dt, Track& track) {
     HandleInput();
     ApplySteeringAndAcceleration(dt);
     UpdatePosition(dt);
-    UpdateFitness(track);
     CheckBounds(track);
+    if (m_IsManual) {
+        return;
+    }
+    UpdateFitness(dt, track);
 }
 
 void Car::Render() const {
@@ -67,8 +70,8 @@ void Car::HandleInput() {
         };
         m_Brain.Forward(inputs);
         std::vector<float> outputs = m_Brain.GetOutput();
-        steering = (float)outputs[0];
-        acceleration = (float)outputs[1];
+        steering = outputs[0];
+        acceleration = (outputs[1] + 1.0f) * 0.5f;
     }
 
     m_Acceleration = acceleration;
@@ -107,33 +110,33 @@ void Car::UpdatePosition(float dt) {
     m_Position = newPos;
 }
 
-void Car::UpdateFitness(Track& track) {
+void Car::UpdateFitness(float dt, Track& track) {
     if (!m_IsAlive) {
         return;
     }
 
-    if (m_Timer > 4.0f) {
+    if (m_Timer > 6.0f) {
         m_Fitness -= 500.0f;
         m_IsAlive = false;
         return;
     }
 
-    m_Fitness += m_DistanceTravel * 2.0f;
+    m_Fitness += m_DistanceTravel * dt;
 
     if (track.CheckCarPassedCheckpoint(m_Position, m_CheckpointPassed)) {
-        m_Fitness += 40.0f;
+        m_Fitness += 10.0f * dt;
 
         if (track.IsLastCheckpoint(m_CheckpointPassed)) {
-            m_Fitness += 50.0f;
+            m_Fitness += 20.0f * dt;
         }
         m_Timer = 0.0f;
     }
 
     m_Fitness += (Vector2Distance(m_RayEnds[0], m_Position) + 
-                  Vector2Distance(m_RayEnds[4], m_Position)) / MAX_RAY_RANGE;
+                  Vector2Distance(m_RayEnds[4], m_Position)) / MAX_RAY_RANGE * dt;
     m_Fitness += (Vector2Distance(m_RayEnds[1], m_Position) + 
-                  Vector2Distance(m_RayEnds[3], m_Position)) / MAX_RAY_RANGE * 5.0f;
-    m_Fitness +=  Vector2Distance(m_RayEnds[2], m_Position) / MAX_RAY_RANGE * 10.0f;
+                  Vector2Distance(m_RayEnds[3], m_Position)) / MAX_RAY_RANGE * 1.2f * dt;
+    m_Fitness +=  Vector2Distance(m_RayEnds[2], m_Position) / MAX_RAY_RANGE * 2.0f * dt;
 }
 
 void Car::CheckBounds(Track& track) {
@@ -192,4 +195,6 @@ void Car::Reset(Vector2 spawnPoint, float spawnAngle) {
     m_IsAlive = true;
     m_Fitness = 0.0f;
     m_DistanceTravel = 0.0f;
+    m_Timer = 0.0f;
+    m_CheckpointPassed = 0;
 }
