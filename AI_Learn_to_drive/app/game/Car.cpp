@@ -18,17 +18,17 @@ Car::~Car() {
 
 }
 
-void Car::Update(float dt, float timer, Track& track) {
+void Car::Update(float dt, Track& track) {
     if (!m_IsAlive) 
         return;
 
-    timer += dt;
+    m_Timer += dt;
 
     UpdateRay(track);
     HandleInput();
     ApplySteeringAndAcceleration(dt);
     UpdatePosition(dt);
-    UpdateFitness(timer);
+    UpdateFitness(track);
     CheckBounds(track);
 }
 
@@ -40,11 +40,11 @@ void Car::Render() const {
     DrawRectanglePro(rect, origin, m_Angle * RAD2DEG, carColor);
 
     // Render ray
-    //DrawLineV(m_Position, m_RayEnds[0], BLUE);
-    //DrawLineV(m_Position, m_RayEnds[1], BLUE);
-    //DrawLineV(m_Position, m_RayEnds[2], BLUE);
-    //DrawLineV(m_Position, m_RayEnds[3], BLUE);
-    //DrawLineV(m_Position, m_RayEnds[4], BLUE);
+    DrawLineV(m_Position, m_RayEnds[0], BLUE);
+    DrawLineV(m_Position, m_RayEnds[1], BLUE);
+    DrawLineV(m_Position, m_RayEnds[2], BLUE);
+    DrawLineV(m_Position, m_RayEnds[3], BLUE);
+    DrawLineV(m_Position, m_RayEnds[4], BLUE);
 }
 
 void Car::HandleInput() {
@@ -107,18 +107,28 @@ void Car::UpdatePosition(float dt) {
     m_Position = newPos;
 }
 
-void Car::UpdateFitness(float timer) {
+void Car::UpdateFitness(Track& track) {
     if (!m_IsAlive) {
         return;
     }
 
-    if (timer > 3.0f && m_DistanceTravel < 1.5f) {
+    if (m_Timer > 4.0f) {
         m_Fitness -= 500.0f;
         m_IsAlive = false;
         return;
     }
 
-    m_Fitness = m_DistanceTravel * 10;
+    m_Fitness += m_DistanceTravel * 2.0f;
+
+    if (track.CheckCarPassedCheckpoint(m_Position, m_CheckpointPassed)) {
+        m_Fitness += 40.0f;
+
+        if (track.IsLastCheckpoint(m_CheckpointPassed)) {
+            m_Fitness += 50.0f;
+        }
+        m_Timer = 0.0f;
+    }
+
     m_Fitness += (Vector2Distance(m_RayEnds[0], m_Position) + 
         Vector2Distance(m_RayEnds[0], m_Position)) / MAX_RAY_RANGE;
     m_Fitness += (Vector2Distance(m_RayEnds[1], m_Position) + 
