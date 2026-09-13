@@ -38,6 +38,8 @@ std::vector<float> Tanh(const std::vector<float>& x) {
     for (size_t i = 0; i < x.size(); i++) {
         out[i] = std::tanh(x[i]);
     }
+
+    return out;
 }
 
 double Tanh_derivative(double x) {
