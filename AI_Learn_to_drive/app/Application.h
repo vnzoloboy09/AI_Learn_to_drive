@@ -1,8 +1,10 @@
 #pragma once
 
-#include "game/Car.h"
 #include "game/Track.h"
-#include "train/Genetic.h"
+#include "game/state/State.h"
+
+#include <unordered_map>
+#include <memory>
 
 enum class Mode {
 	Train = 0,
@@ -26,48 +28,20 @@ public:
 	void Update(float dt);
 	void Render() const;
 
-	bool IsAllDead();
-
-	void Reset();
-
-private:
-	void HandleTrainInput();
-	void HandleEditInput();
-	void HandleDemoInput();
-	
-	void UpdateTrain(float dt);
-	void UpdateEdit();
-	void UpdateDemo(float dt);
-
-	void RenderCar() const;
-	void RenderUI() const;
-	void RenderCheckpoints() const;
-
-	void SwitchModeTo(Mode mode);
+	Vector2 GetMousePos() const { return m_MousePos; }
+	void SetState(StateType type);
 
 private:
-	// Application
+	void RegistryState(StateType type, std::unique_ptr<State> state);
+
+private:
 	const int m_ScreenWidth;
 	const int m_ScreenHeight;
-	bool m_Running;
-	Mode m_Mode = Mode::Train;
-	EditMode m_EditMode = EditMode::TrackEdit;
-	float m_Timer = 0.0f;
-	size_t m_GenerationCount;
-	float m_BestScore = 0.0f;
-	bool m_ShowCheckpoint = true;
 
-	// Input
 	Vector2 m_MousePos = { 0.0f, 0.0f };
-	
-	// Edit Mode
-	int m_SelectedCheckpointId = -1;
-
-	// Game
-	std::vector<Car> m_Cars;
-	Car m_DemoCar;
-	Car m_User;
-	Genetic m_Ga;
 	Track m_Track;
+
+	std::unordered_map<StateType, std::unique_ptr<State>> m_StateRegistry;
+	State* currentState = nullptr;
 };
 
