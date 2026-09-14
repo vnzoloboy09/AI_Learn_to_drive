@@ -13,7 +13,7 @@ Application::Application(int screenWidth, int screenHeight, const char* title)
 	InitWindow(m_ScreenWidth, m_ScreenHeight, title);
 	SetTargetFPS(60);
 
-	bool loaded = m_Ga.LoadPopulation("app/train/save", m_GenerationCount, m_Cars, START_POSITION, START_ANGLE);
+	bool loaded = m_Ga.LoadPopulation("app/train/cars", m_GenerationCount, m_Cars, START_POSITION, START_ANGLE);
 
 	if (!loaded) {
 		m_GenerationCount = 1;
@@ -22,7 +22,7 @@ Application::Application(int screenWidth, int screenHeight, const char* title)
 		}
 	}
 
-	m_Track.Load("app/game/assets/track.png");
+	m_Track.Load("app/train/tracks/track_01"); //default track
 
 	m_Running = true;
 }
@@ -62,7 +62,7 @@ void Application::HandleInput() {
 // ========Handle_Input========
 void Application::HandleTrainInput() {
 	if (IsKeyPressed(KEY_S)) {
-		m_Ga.SavePopulation("app/train/save", m_GenerationCount, m_Cars);
+		m_Ga.SavePopulation("app/train/cars", m_GenerationCount, m_Cars);
 	}
 	if (IsKeyPressed(KEY_E)) {
 		SwitchModeTo(Mode::Edit);
@@ -90,6 +90,9 @@ void Application::HandleEditInput() {
 	}
 	if (IsKeyPressed(KEY_TWO)) {
 		m_EditMode = EditMode::CheckpointEdit;
+	}
+	if (IsKeyPressed(KEY_S)) {
+		m_Track.Save("app/train/tracks/track_01");
 	}
 
 	switch (m_EditMode) 
@@ -259,13 +262,14 @@ void Application::RenderUI() const {
 	{
 		DrawText("T: Train",1050, 10, 20, GRAY);
 		DrawText("D: Demo", 1050, 40, 20, GRAY);
+		DrawText("S: Save track", 1050, 70, 20, GRAY);
 		if (m_EditMode == EditMode::TrackEdit) {
-			DrawText("1 : Draw track", 1050, 70, 20, GREEN);
+			DrawText("1 : Draw track", 1050, 100, 20, GREEN);
 			DrawText("2 : Draw checkpoint", 1050, 100, 20, GRAY);
 		}
 		else {
 			DrawText("1 : Draw track", 1050, 70, 20, GRAY);
-			DrawText("2 : Draw checkpoint", 1050, 100, 20, GREEN);
+			DrawText("2 : Draw checkpoint", 1050, 130, 20, GREEN);
 		}
 		
 		break;
@@ -303,7 +307,7 @@ void Application::SwitchModeTo(Mode mode) {
 		m_ShowCheckpoint = true;
 		break;
 	case Mode::Demo:
-		m_DemoCar.SetBrain(Network("app/train/save/car_0.txt"));
+		m_DemoCar.SetBrain(Network("app/train/cars/car_0.txt"));
 		m_DemoCar.Reset();
 		break;
 	default:

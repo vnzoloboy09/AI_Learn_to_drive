@@ -2,6 +2,7 @@
 
 #include <raylib.h>
 #include <vector>
+#include <string>
 
 const size_t CHECKPOINT_SIZE = 30.0f;
 
@@ -11,7 +12,7 @@ public:
 	Track();
 	~Track();
 
-	void Load(const char* filePath);
+	void Load(const std::string& filePath);
 	void Unload();
 	bool IsWall(float x, float y) const;
 	bool CheckCarPassedCheckpoint(Vector2 carPos, size_t currentCheckpointIndex) const;
@@ -19,12 +20,11 @@ public:
 	float GetAngelToCheckpoint(Vector2 carPos, Vector2 centerRayEnd, size_t checkpointIndex) const;
 	void Render() const;
 
+	void Save(const std::string& filepath) const;
+
 public:
 	std::vector<Vector2> checkpoints;
 	Texture2D trackTexture;
 	Image trackImage;
-
-private:
-	const char* DEFAULT_PATH = "save";
 };
 

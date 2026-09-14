@@ -2,6 +2,7 @@
 
 #include <raymath.h>
 #include <iostream>
+#include <fstream>
 
 Track::Track() 
 {
@@ -12,31 +13,71 @@ Track::~Track() {
     Unload();
 }
 
-void Track::Load(const char* filePath) {
-    trackImage = LoadImage(filePath);
-    trackTexture = LoadTextureFromImage(trackImage);
+void Track::Save(const std::string& filepath) const {
+    std::ofstream outFile(filepath, std::ios::binary);
+    if (!outFile.is_open()) {
+        TraceLog(LOG_ERROR, "Failed to open file for writing: %s", filepath.c_str());
+        return;
+    }
 
-    //for (int y = 0; y < trackImage.height; y++) {
-    //    for (int x = 0; x < trackImage.width; x++) {
-    //        Color pixel = GetImageColor(trackImage, x, y);
+    size_t cpCount = checkpoints.size();
+    outFile.write(reinterpret_cast<const char*>(&cpCount), sizeof(cpCount));
+    if (cpCount > 0) {
+        outFile.write(reinterpret_cast<const char*>(checkpoints.data()), cpCount * sizeof(Vector2));
+    }
 
-    //        if (pixel.r >= 205 && pixel.g >= 205 && pixel.b <= 50) {
-    //            Vector2 newCp = { (float)x, (float)y };
+    int fileSize = 0;
+    unsigned char* fileData = ExportImageToMemory(trackImage, ".png", &fileSize);
 
-    //            bool tooClose = false;
-    //            for (const auto& cp : checkpoints) {
-    //                if (Vector2Distance(cp, newCp) <= 62.0f) {
-    //                    tooClose = true;
-    //                    break;
-    //                }
-    //            }
+    if (fileData != nullptr && fileSize > 0) {
+        outFile.write(reinterpret_cast<const char*>(&fileSize), sizeof(fileSize));
+        outFile.write(reinterpret_cast<const char*>(fileData), fileSize);
 
-    //            if (!tooClose) {
-    //                checkpoints.push_back(newCp);
-    //            }
-    //        }
-    //    }
-    //}
+        MemFree(fileData);
+        TraceLog(LOG_INFO, "Track and checkpoints successfully saved to single file: %s", filepath.c_str());
+    }
+    else {
+        TraceLog(LOG_ERROR, "Failed to export track image to memory!");
+    }
+
+    outFile.close();
+}
+
+void Track::Load(const std::string& filepath) {
+    std::ifstream inFile(filepath, std::ios::binary);
+    if (!inFile.is_open()) {
+        TraceLog(LOG_ERROR, "Failed to open file for reading: %s", filepath.c_str());
+        return;
+    }
+
+    size_t cpCount = 0;
+    inFile.read(reinterpret_cast<char*>(&cpCount), sizeof(cpCount));
+
+    checkpoints.resize(cpCount);
+    if (cpCount > 0) {
+        inFile.read(reinterpret_cast<char*>(checkpoints.data()), cpCount * sizeof(Vector2));
+    }
+
+    int fileSize = 0;
+    inFile.read(reinterpret_cast<char*>(&fileSize), sizeof(fileSize));
+
+    if (fileSize > 0) {
+        std::vector<unsigned char> fileBuffer(fileSize);
+        inFile.read(reinterpret_cast<char*>(fileBuffer.data()), fileSize);
+
+        UnloadImage(trackImage);
+        trackImage = LoadImageFromMemory(".png", fileBuffer.data(), fileSize);
+
+        UnloadTexture(trackTexture);
+        trackTexture = LoadTextureFromImage(trackImage);
+
+        TraceLog(LOG_INFO, "Loaded track and %zu checkpoints from single file.", checkpoints.size());
+    }
+    else {
+        TraceLog(LOG_ERROR, "Invalid or empty image data in file!");
+    }
+
+    inFile.close();
 }
 
 void Track::Unload() {
@@ -90,6 +131,7 @@ float Track::GetAngelToCheckpoint(Vector2 carPos, Vector2 centerRayEnd, size_t c
     return fabs(angleRad * (180.0f / PI));
 
 }
+
 
 void Track::Render() const {
     DrawTexture(trackTexture, 0, 0, WHITE);
