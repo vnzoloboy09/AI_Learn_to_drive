@@ -100,7 +100,7 @@ void Genetic::Mutate(Network& net) {
 	}
 }
 
-void Genetic::SavePopulation(const std::string& filepath, size_t currentGeneration, const std::vector<Car>& population) {
+void Genetic::SavePopulation(const std::string& filepath, size_t currentGeneration, std::vector<Car>& population) {
 	std::ofstream metaFile(filepath + "/meta.txt");
 	if (metaFile.is_open()) {
 		metaFile << currentGeneration << "\n";
@@ -108,6 +108,11 @@ void Genetic::SavePopulation(const std::string& filepath, size_t currentGenerati
 		metaFile.close();
 		std::cout << "Saved: " << filepath + "/meta.txt" << '\n';
 	}
+
+	std::sort(population.begin(), population.end(),
+		[](Car A, Car B) {
+			return A.GetFitness() > B.GetFitness();
+		});
 
 	for (size_t i = 0; i < population.size(); ++i) {
 		std::string path = filepath + "/car_" + std::to_string(i) + ".txt";

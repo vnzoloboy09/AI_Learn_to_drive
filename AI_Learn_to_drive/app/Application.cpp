@@ -7,21 +7,17 @@
 #include <string>
 
 Application::Application(int screenWidth, int screenHeight, const char* title)
-	: m_ScreenWidth(screenWidth), m_ScreenHeight(screenHeight)
+	: m_ScreenWidth(screenWidth), m_ScreenHeight(screenHeight),
+	m_User(true), m_DemoCar(false)
 {
 	InitWindow(m_ScreenWidth, m_ScreenHeight, title);
 	SetTargetFPS(60);
-
-	m_Cars.reserve(10);
-	for (size_t i = 0; i < 10; i++) {
-		m_Cars.emplace_back(false);
-	}
 
 	bool loaded = m_Ga.LoadPopulation("app/train/save", m_GenerationCount, m_Cars, START_POSITION, START_ANGLE);
 
 	if (!loaded) {
 		m_GenerationCount = 1;
-		for (int i = 0; i < 100; ++i) {
+		for (int i = 0; i < 110; ++i) {
 			m_Cars.emplace_back(false);
 		}
 	}
@@ -65,17 +61,17 @@ void Application::HandleInput() {
 
 // ========Handle_Input========
 void Application::HandleTrainInput() {
-	if (IsKeyDown(KEY_S)) {
+	if (IsKeyPressed(KEY_S)) {
 		m_Ga.SavePopulation("app/train/save", m_GenerationCount, m_Cars);
 	}
-	if (IsKeyDown(KEY_E)) {
+	if (IsKeyPressed(KEY_E)) {
 		SwitchModeTo(Mode::Edit);
 	}
-	if (IsKeyDown(KEY_D)) {
+	if (IsKeyPressed(KEY_D)) {
 		SwitchModeTo(Mode::Demo);
 	}
-	if (IsKeyDown(KEY_R)) {
-		user.Reset();
+	if (IsKeyPressed(KEY_R)) {
+		m_User.Reset();
 	}
 	if (IsKeyPressed(KEY_H)) {
 		m_ShowCheckpoint = !m_ShowCheckpoint;
@@ -83,16 +79,16 @@ void Application::HandleTrainInput() {
 }
 
 void Application::HandleEditInput() {
-	if (IsKeyDown(KEY_T)) {
+	if (IsKeyPressed(KEY_T)) {
 		SwitchModeTo(Mode::Train);
 	}
-	if (IsKeyDown(KEY_D)) {
+	if (IsKeyPressed(KEY_D)) {
 		SwitchModeTo(Mode::Demo);
 	}
-	if (IsKeyDown(KEY_ONE)) {
+	if (IsKeyPressed(KEY_ONE)) {
 		m_EditMode = EditMode::TrackEdit;
 	}
-	if (IsKeyDown(KEY_TWO)) {
+	if (IsKeyPressed(KEY_TWO)) {
 		m_EditMode = EditMode::CheckpointEdit;
 	}
 
@@ -124,7 +120,7 @@ void Application::HandleEditInput() {
 	}
 	case EditMode::TrackEdit:
 	{
-		if (IsKeyDown(KEY_C)) {
+		if (IsKeyPressed(KEY_C)) {
 			ImageClearBackground(&m_Track.trackImage, BLACK);
 		}
 		if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
@@ -146,10 +142,13 @@ void Application::HandleDemoInput() {
 		SwitchModeTo(Mode::Train);
 	}
 	if (IsKeyPressed(KEY_R)) {
-		m_Cars[0].Reset();
+		m_DemoCar.Reset();
 	}
 	if (IsKeyPressed(KEY_E)) {
 		SwitchModeTo(Mode::Edit);
+	}
+	if (IsKeyPressed(KEY_H)) {
+		m_ShowCheckpoint = !m_ShowCheckpoint;
 	}
 }
 
@@ -176,7 +175,7 @@ void Application::UpdateTrain(float dt) {
 	for (auto& car : m_Cars) {
 		car.Update(dt, m_Track);
 	}
-	user.Update(dt, m_Track);
+	m_User.Update(dt, m_Track);
 
 	if (IsAllDead() || m_Timer > 35.0f) {
 		m_GenerationCount++;
@@ -191,7 +190,7 @@ void Application::UpdateEdit() {
 }
 
 void Application::UpdateDemo(float dt) {
-	m_Cars[0].Update(dt, m_Track);
+	m_DemoCar.Update(dt, m_Track);
 }
 
 // ==========Render============
@@ -206,7 +205,7 @@ void Application::Render() const {
 		m_Track.Render();
 		RenderCheckpoints();
 		RenderCar();
-		user.Render();
+		m_User.Render();
 		break;
 	}
 	case Mode::Edit:
@@ -218,7 +217,7 @@ void Application::Render() const {
 	case Mode::Demo:
 		m_Track.Render();
 		RenderCheckpoints();
-		m_Cars[0].Render();
+		m_DemoCar.Render();
 		break;
 	default:
 		break;
@@ -275,6 +274,7 @@ void Application::RenderUI() const {
 		DrawText("E: Edit", 1050, 10, 20, GRAY);
 		DrawText("D: Demo", 1050, 40, 20, GRAY);
 		DrawText("R: Reset", 1050, 70, 20, GRAY);
+		DrawText("H: Toggle checkpoint", 1050, 100, 20, m_ShowCheckpoint ? GREEN : GRAY);
 		break;
 	default:
 		break;
@@ -300,10 +300,11 @@ void Application::SwitchModeTo(Mode mode) {
 		m_Timer = 0.0f;
 		break;
 	case Mode::Edit:
+		m_ShowCheckpoint = true;
 		break;
 	case Mode::Demo:
-		m_Cars[0].SetDemo(true);
-		m_Cars[0].Reset();
+		m_DemoCar.SetBrain(Network("app/train/save/car_0.txt"));
+		m_DemoCar.Reset();
 		break;
 	default:
 		break;

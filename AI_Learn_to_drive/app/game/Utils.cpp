@@ -18,5 +18,5 @@ float CastRay(Vector2 carPos, float rayAngle, float maxRange, Track& track) {
 }
 
 float DegreeToRadian(float angle) {
-    return angle * 3.14 / 180.0f;
+    return angle * 3.14f / 180.0f;
 }

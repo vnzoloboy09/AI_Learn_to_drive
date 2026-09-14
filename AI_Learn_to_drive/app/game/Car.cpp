@@ -3,8 +3,8 @@
 #include <raymath.h>
 #include <iostream>
 
-Car::Car(bool isMaual = false) 
-    : m_IsManual(isMaual), m_RayEnds(5)
+Car::Car(bool isManual) 
+    : m_IsManual(isManual), m_RayEnds(5)
 {
     m_RayEnds = {
         { 0.0f, 0.0f },

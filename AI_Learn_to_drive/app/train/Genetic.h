@@ -12,7 +12,7 @@ public:
 
 	float Evolve(std::vector<Car>& population, Vector2 spawnPoint, float spawnAngle);
 
-	void SavePopulation(const std::string& filepath, size_t currentGeneration, const std::vector<Car>& population);
+	void SavePopulation(const std::string& filepath, size_t currentGeneration, std::vector<Car>& population);
 	bool LoadPopulation(const std::string& filepath, size_t& outGeneration, 
 		std::vector<Car>& population, Vector2 spawnPos, float spawnAngle);
 

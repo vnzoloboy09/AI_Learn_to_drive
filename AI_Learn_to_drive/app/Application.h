@@ -65,7 +65,8 @@ private:
 
 	// Game
 	std::vector<Car> m_Cars;
-	Car user = Car(true);
+	Car m_DemoCar;
+	Car m_User;
 	Genetic m_Ga;
 	Track m_Track;
 };

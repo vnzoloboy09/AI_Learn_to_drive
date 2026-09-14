@@ -21,7 +21,7 @@ class Track;
 class Car
 {
 public:
-	Car(bool isManual);
+	Car(bool isManual = false);
 	~Car();
 
 	void Update(float dt, Track& track);
