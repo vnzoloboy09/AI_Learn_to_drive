@@ -1,11 +1,5 @@
 #include "Application.h"
 
-#include <iostream>
-#include <raylib.h>
-#include <fstream>
-#include <raymath.h>
-#include <string>
-
 #include "game/state/StateInclude.h"
 
 Application::Application(int screenWidth, int screenHeight, const char* title)

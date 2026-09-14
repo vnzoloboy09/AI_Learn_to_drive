@@ -1,8 +1,6 @@
 #pragma once
 
-#include "game/Car.h"
 #include "game/Track.h"
-#include "train/Genetic.h"
 #include "game/state/State.h"
 
 #include <unordered_map>
@@ -37,11 +35,9 @@ private:
 	void RegistryState(StateType type, std::unique_ptr<State> state);
 
 private:
-	// Application
 	const int m_ScreenWidth;
 	const int m_ScreenHeight;
 
-	// Input
 	Vector2 m_MousePos = { 0.0f, 0.0f };
 	Track m_Track;
 
