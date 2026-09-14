@@ -42,7 +42,13 @@
     <ClCompile Include="app\train\Genetic.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="app\game\State\TrainState.cpp">
+    <ClCompile Include="app\game\state\TrainState.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="app\game\state\DemoState.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="app\game\state\EditState.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -71,10 +77,19 @@
     <ClInclude Include="app\train\Genetic.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="app\game\State\State.h">
+    <ClInclude Include="app\game\state\State.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="app\game\State\TrainState.h">
+    <ClInclude Include="app\game\state\TrainState.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="app\game\state\DemoState.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="app\game\state\EditState.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="app\game\state\StateInclude.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

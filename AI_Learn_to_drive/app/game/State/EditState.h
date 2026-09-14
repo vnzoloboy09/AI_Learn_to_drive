@@ -1,17 +1,19 @@
 #pragma once
 
 #include "State.h"
-#include "app/Application.h"
+
+class Application;
 
 class EditState : public TrackAwareState
 {
 public:
-	EditState(Track* track, const Application& app);
+	EditState(Track* track, Application& app);
 	~EditState();
 
-	void HandleInput();
-	void Update(float dt);
-	void Render() const;
+	void HandleInput() override;
+	void Update(float dt) override;
+	void Render() const override;
+	void Reset() override;
 
 private:
 	enum Mode {
@@ -19,7 +21,7 @@ private:
 		EditTrack
 	};
 
-	const Application& m_App;
+	Application& m_App;
 
 	Mode m_Mode = EditCheckpoint;
 	int m_SelectedCheckpointId = -1;

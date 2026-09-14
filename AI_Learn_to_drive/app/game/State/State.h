@@ -1,5 +1,11 @@
 #pragma once
 
+enum class StateType {
+	Train = 0,
+	Edit,
+	Demo
+};
+
 class State {
 public:
 	State() = default;
@@ -8,6 +14,7 @@ public:
 	virtual void HandleInput() = 0;
 	virtual void Update(float dt) = 0;
 	virtual void Render() const = 0;
+	virtual void Reset() = 0;
 public:
 	enum {
 		Train,
@@ -18,7 +25,7 @@ public:
 
 class Track;
 
-class TrackAwareState : State {
+class TrackAwareState : public State {
 public:
 	explicit TrackAwareState(Track* track) : m_Track(track) {}
 
