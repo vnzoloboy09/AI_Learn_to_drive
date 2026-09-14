@@ -132,7 +132,18 @@ float Track::GetAngelToCheckpoint(Vector2 carPos, Vector2 centerRayEnd, size_t c
 
 }
 
-
 void Track::Render() const {
     DrawTexture(trackTexture, 0, 0, WHITE);
+
+    if (!m_ShowCheckpoints) {
+        return;
+    }
+
+    for (int i = 0; i < checkpoints.size(); i++) {
+        DrawCircle(static_cast<int>(checkpoints[i].x),
+            static_cast<int>(checkpoints[i].y), CHECKPOINT_SIZE, YELLOW);
+        std::string id = std::to_string(i);
+        DrawText(id.c_str(), static_cast<int>(checkpoints[i].x - 5),
+            static_cast<int>(checkpoints[i].y) - 5, 20, BLACK);
+    }
 }

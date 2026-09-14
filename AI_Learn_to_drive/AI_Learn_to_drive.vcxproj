@@ -167,21 +167,28 @@
     <ClCompile Include="app\game\Car.cpp" />
     <ClCompile Include="app\game\Utils.cpp" />
     <ClCompile Include="app\train\Genetic.cpp" />
+    <ClCompile Include="app\game\State\DemoState.cpp" />
+    <ClCompile Include="app\game\State\EditState.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="app\model\Help.cpp" />
     <ClCompile Include="app\model\Layer.cpp" />
     <ClCompile Include="app\model\Network.cpp" />
     <ClCompile Include="app\game\Track.cpp" />
+    <ClCompile Include="app\game\State\TrainState.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="app\Application.h" />
     <ClInclude Include="app\game\Car.h" />
+    <ClInclude Include="app\game\State\State.h" />
     <ClInclude Include="app\game\Utils.h" />
     <ClInclude Include="app\model\Help.h" />
     <ClInclude Include="app\model\Layer.h" />
     <ClInclude Include="app\model\Network.h" />
     <ClInclude Include="app\game\Track.h" />
     <ClInclude Include="app\train\Genetic.h" />
+    <ClInclude Include="app\game\State\TrainState.h" />
+    <ClInclude Include="app\game\State\DemoState.h" />
+    <ClInclude Include="app\game\State\EditState.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

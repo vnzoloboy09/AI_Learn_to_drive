@@ -29,6 +29,7 @@ public:
 	bool IsAllDead();
 
 	void Reset();
+	Vector2 GetMousePos() const { return m_MousePos; }
 
 private:
 	void HandleTrainInput();
@@ -42,6 +43,7 @@ private:
 	void RenderCar() const;
 	void RenderUI() const;
 	void RenderCheckpoints() const;
+
 
 	void SwitchModeTo(Mode mode);
 
