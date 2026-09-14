@@ -10,7 +10,7 @@ class Genetic
 public:
 	Genetic(float mutationRate = 0.15f, float mutationStrength = 0.3f, size_t elitismCount = 5);
 
-	void Evolve(std::vector<Car>& population, Vector2 spawnPoint, float spawnAngle);
+	float Evolve(std::vector<Car>& population, Vector2 spawnPoint, float spawnAngle);
 
 	void SavePopulation(const std::string& filepath, size_t currentGeneration, const std::vector<Car>& population);
 	bool LoadPopulation(const std::string& filepath, size_t& outGeneration, 

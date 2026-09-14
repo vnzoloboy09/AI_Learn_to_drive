@@ -7,6 +7,7 @@
 enum class Mode {
 	Train = 0,
 	Edit,
+	Demo
 };
 
 enum class EditMode {
@@ -30,15 +31,19 @@ public:
 	void Reset();
 
 private:
-	void HandelTrainInput();
-	void HandelEditInput();
+	void HandleTrainInput();
+	void HandleEditInput();
+	void HandleDemoInput();
 	
 	void UpdateTrain(float dt);
 	void UpdateEdit();
+	void UpdateDemo(float dt);
 
 	void RenderCar() const;
 	void RenderUI() const;
 	void RenderCheckpoints() const;
+
+	void SwitchModeTo(Mode mode);
 
 private:
 	// Application
@@ -50,6 +55,7 @@ private:
 	float m_Timer = 0.0f;
 	size_t m_GenerationCount;
 	float m_BestScore = 0.0f;
+	bool m_ShowCheckpoint = true;
 
 	// Input
 	Vector2 m_MousePos = { 0.0f, 0.0f };

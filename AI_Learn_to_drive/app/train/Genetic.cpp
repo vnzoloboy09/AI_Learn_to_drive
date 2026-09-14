@@ -8,11 +8,13 @@ Genetic::Genetic(float mutationRate, float mutationStrength, size_t elitismCount
 	: m_MutationRate(mutationRate), m_MutationStrength(mutationStrength), m_ElitismCount(elitismCount)
 { }
 
-void Genetic::Evolve(std::vector<Car>& population, Vector2 spawnPoint, float spawnAngle) {
+float Genetic::Evolve(std::vector<Car>& population, Vector2 spawnPoint, float spawnAngle) {
+	float best = 0.0f;
 	std::sort(population.begin(), population.end(), 
 		[](Car A, Car B) {
 			return A.GetFitness() > B.GetFitness();
 		});
+	best = population[0].GetFitness();
 
 	std::vector<Car> nextGen;
 	nextGen.reserve(population.size());
@@ -37,6 +39,7 @@ void Genetic::Evolve(std::vector<Car>& population, Vector2 spawnPoint, float spa
 	}
 
 	population = nextGen;
+	return best;
 }
 
 Network Genetic::TournamentSelection(const std::vector<Car>& population) {

@@ -14,6 +14,7 @@ const float CAR_HEIGHT = 16.0f;
 const Vector2 START_POSITION = { 170, 470 };
 const float START_ANGLE = DegreeToRadian(-90);
 const float MAX_RAY_RANGE = 150.0f;
+const float TIME_OUT = 6.0f;
 
 class Track;
 
@@ -39,6 +40,7 @@ public:
 	void SetFitness(float fitness) { m_Fitness = fitness; }
 	Network GetBrain() const { return m_Brain; }
 	void SetBrain(Network brain) { m_Brain = brain; }
+	void SetDemo(bool demoing) { m_Demoing = demoing; }
 
 	float GetDistanceTravel() const { return m_DistanceTravel; }
 
@@ -63,8 +65,12 @@ private:
 	float m_Acceleration = 0.0f;
 
 	float m_DistanceTravel = 0.0f;
-	size_t m_CheckpointPassed = 0;
-	float m_Timer = 0.0f;
+	size_t m_TargetCheckpoint = 0;
+	size_t m_LapFinished = 0;
+	float m_CheckpointTimer = 0.0f;
+
+	bool m_Demoing = false;
+	bool m_IsInCheckpoint = false;
 
 	std::vector<Vector2> m_RayEnds;
 };
