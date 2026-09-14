@@ -29,7 +29,7 @@ void EditState::HandleInput() {
 		m_Mode = EditTrack;
 	}
 	if (IsKeyPressed(KEY_S)) {
-		m_Track->Save("app/train/tracks/track_01");
+		m_Track->Save("app/train/tracks/track_1");
 	}
 
 	Vector2 mousePos = m_App.GetMousePos();

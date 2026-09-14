@@ -11,5 +11,5 @@ int main()
 	Application app(SCREEN_WIDTH, SCREEN_HEIGHT, TITLE);
 	app.Run();
 
-    return 0;
+	return 0;
 }

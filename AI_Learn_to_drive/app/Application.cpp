@@ -13,7 +13,7 @@ Application::Application(int screenWidth, int screenHeight, const char* title)
 	RegistryState(StateType::Demo,  std::make_unique<DemoState>(&m_Track, *this));
 	SetState(StateType::Train);
 
-	m_Track.Load("app/train/tracks/track_01"); //default track
+	m_Track.Load("app/train/tracks/track_1"); // Default track
 }
 
 Application::~Application() {

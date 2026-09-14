@@ -5,6 +5,7 @@
 DemoState::DemoState(Track* track, Application& app)
 	: TrackAwareState(track), m_App(app)
 {
+	m_Car.SetBrain(Network("app/train/cars/car_0.txt"));
 }
 
 DemoState::~DemoState() {
@@ -19,7 +20,7 @@ void DemoState::HandleInput() {
 		m_App.SetState(StateType::Edit);
 	}
 	if (IsKeyPressed(KEY_R)) {
-		m_Car.Reset();
+		ResetCar();
 	}
 	if (IsKeyPressed(KEY_H)) {
 		m_Track->ToggleShowCheckpoints();
@@ -41,5 +42,10 @@ void DemoState::Render() const {
 }
 
 void DemoState::Reset() {
+	m_Car.SetBrain(Network("app/train/cars/car_0.txt"));
+	ResetCar();
+}
+
+void DemoState::ResetCar() {
 	m_Car.Reset();
 }

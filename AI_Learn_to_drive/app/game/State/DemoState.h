@@ -16,6 +16,8 @@ public:
 	void Render() const override;
 	void Reset() override;
 
+	void ResetCar();
+
 private:
 	Car m_Car;
 
