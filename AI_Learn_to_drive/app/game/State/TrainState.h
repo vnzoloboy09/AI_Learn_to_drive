@@ -31,5 +31,8 @@ private:
 	float m_BestScore = FLT_MIN;
 	
 	Application& m_App;
+
+	char m_SaveStatusMessage[128] = "";
+	float m_SaveStatusTimer = 0.0f;
 };
 

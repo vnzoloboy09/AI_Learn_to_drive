@@ -5,8 +5,8 @@
 
 #include <raylib.h>
 #include <raymath.h>
-#include <raygui.h>
 #include <filesystem>
+#include <raygui.h>
 
 EditState::EditState(Track* track, Application& app)
 	: TrackAwareState(track), m_App(app)

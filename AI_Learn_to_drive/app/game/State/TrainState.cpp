@@ -1,6 +1,7 @@
 #include "TrainState.h"
 
 #include "app/Application.h"
+#include <raygui.h>
 
 TrainState::TrainState(Track* track, Application& app)
 	: TrackAwareState(track), m_UserCar(true), m_App(app)
@@ -19,18 +20,6 @@ TrainState::~TrainState() {
 }
 
 void TrainState::HandleInput() {
-	if (IsKeyPressed(KEY_S)) {
-		m_Ga.SavePopulation("app/train/cars", m_GenerationCount, m_Cars);
-	}
-	if (IsKeyPressed(KEY_E)) {
-		m_App.SetState(StateType::Edit);
-	}
-	if (IsKeyPressed(KEY_D)) {
-		m_App.SetState(StateType::Demo);
-	}
-	if (IsKeyPressed(KEY_R)) {
-		m_UserCar.Reset();
-	}
 	if (IsKeyPressed(KEY_H)) {
 		m_Track->ToggleShowCheckpoints();
 	}
@@ -49,6 +38,8 @@ void TrainState::Update(float dt) {
 
 		m_Timer = 0.0f;
 	}
+
+	m_SaveStatusTimer = std::max(m_SaveStatusTimer - dt, 0.0f);
 }
 
 void TrainState::Render() {
@@ -60,19 +51,37 @@ void TrainState::Render() {
 		car.Render();
 	}
 	m_UserCar.Render();
+	EndScissorMode();
+
+	RenderUI();
+}
+
+void TrainState::RenderUI() {
+	Rectangle uiArea = m_App.GetUIArea();
 
 	DrawText(TextFormat("Gen: %zu", (m_GenerationCount)), 10, 10, 20, DARKGRAY);
 	DrawText(TextFormat("Time: %.3f ms", m_Timer), 10, 40, 20, DARKGRAY);
 	DrawText(TextFormat("Best: %.3f", m_BestScore), 10, 70, 20, DARKGRAY);
 
-	DrawText("E: Edit", 1050, 10, 20, GRAY);
-	DrawText("D: Demo", 1050, 40, 20, GRAY);
-	DrawText("H: Toggle checkpoint", 1050, 70, 20, m_Track->ShowingCheckpoints() ? GREEN : GRAY);
-	EndScissorMode();
-}
+	GuiPanel(uiArea, "Control Panel");
 
-void TrainState::RenderUI() {
+	if (GuiButton({ uiArea.x + 20, 40, 170, 35 }, "Edit")) {
+		m_App.SetState(StateType::Edit);
+	}
+	if (GuiButton({ uiArea.x + 210, 40, 170, 35 }, "Watch Demo")) {
+		m_App.SetState(StateType::Demo);
+	}
+	if (GuiButton({ uiArea.x + 20, 85, 170, 35 }, "Save population")) {
+		m_Ga.SavePopulation("app/train/cars", m_GenerationCount, m_Cars);
+		m_SaveStatusTimer = 3.0f;
+	}
+	if (GuiButton({ uiArea.x + 210, 85, 170, 35 }, "Reset user car")) {
+		m_UserCar.Reset();
+	}
 
+	if (m_SaveStatusTimer > 0.0f) {
+		DrawText("Saved", uiArea.x + 20, 125, 10, BLUE);
+	}
 }
 
 void TrainState::Reset() {

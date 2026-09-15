@@ -1,5 +1,5 @@
-#include <iostream>
-
+#define RAYGUI_IMPLEMENTATION
+#include <raygui.h>
 #include "app/Application.h"
 
 int main()
