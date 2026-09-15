@@ -34,5 +34,9 @@ private:
 
 	char m_SaveStatusMessage[128] = "";
 	float m_SaveStatusTimer = 0.0f;
+
+	Rectangle nnArea;
+	std::vector<std::vector<Vector2>> m_NodePositions;
+	std::vector<std::pair<float, Color>> m_BlinkConnection;
 };
 

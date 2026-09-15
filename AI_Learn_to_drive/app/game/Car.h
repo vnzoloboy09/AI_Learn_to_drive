@@ -53,7 +53,7 @@ private:
 	void UpdateRay(Track& track);
 
 private:
-	Network m_Brain = Network({ 5, 10, 10, 2 });
+	Network m_Brain;
 	Vector2 m_Position = START_POSITION;
 	float m_Angle = START_ANGLE;
 	float m_Speed = 0.0f;

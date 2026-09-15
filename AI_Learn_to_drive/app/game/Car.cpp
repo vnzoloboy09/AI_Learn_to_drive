@@ -4,7 +4,7 @@
 #include <iostream>
 
 Car::Car(bool isManual) 
-    : m_IsManual(isManual), m_RayEnds(5)
+    : m_IsManual(isManual), m_RayEnds(5), m_Brain({ 5, 10, 10, 2 })
 {
     m_RayEnds = {
         { 0.0f, 0.0f },

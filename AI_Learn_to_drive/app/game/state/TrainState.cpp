@@ -1,7 +1,10 @@
 #include "TrainState.h"
 
 #include "app/Application.h"
+#include "app/model/Help.h"
+
 #include <raygui.h>
+#include <vector>
 
 TrainState::TrainState(Track* track, Application& app)
 	: TrackAwareState(track), m_UserCar(true), m_App(app)
@@ -13,6 +16,48 @@ TrainState::TrainState(Track* track, Application& app)
 		for (int i = 0; i < 110; ++i) {
 			m_Cars.emplace_back(false);
 		}
+	}
+
+	Rectangle uiArea = m_App.GetUIArea();
+	nnArea = {
+		uiArea.x + 20,
+		uiArea.y + 150,
+		uiArea.width - 40,
+		uiArea.height - 170
+	};
+
+	std::vector<Layer> layers = m_Cars[0].GetBrain().GetLayers();
+	int numLayers = layers.size() + 1;
+	float rowHeightStep = nnArea.height / (numLayers + 1);
+	m_NodePositions.resize(numLayers);
+
+	int numNeuronsInRow = layers[0].inputCnt;
+	int preNumNeuronsInRow;
+	float colWidthStep = nnArea.width / (numNeuronsInRow + 1);
+	int connectionCount = 0;
+
+	for (int n = 0; n < numNeuronsInRow; n++) {
+		float x = nnArea.x + (n + 1) * colWidthStep;
+		float y = nnArea.y + 1 * rowHeightStep;
+		m_NodePositions[0].push_back({ x, y });
+	}
+
+	for (int r = 1; r < numLayers; r++) {
+		preNumNeuronsInRow = numNeuronsInRow;
+		numNeuronsInRow = layers[r - 1].outputCnt;
+		connectionCount += numNeuronsInRow * preNumNeuronsInRow;
+		colWidthStep = nnArea.width / (numNeuronsInRow + 1);
+
+		for (int n = 0; n < numNeuronsInRow; n++) {
+			float x = nnArea.x + (n + 1) * colWidthStep;
+			float y = nnArea.y + (r + 1) * rowHeightStep;
+			m_NodePositions[r].push_back({ x, y });
+		}
+	}
+
+	m_BlinkConnection.resize(connectionCount);
+	for (auto& c : m_BlinkConnection) {
+		c.first = RandomFloat(0.0f, 2.5f);
 	}
 }
 
@@ -40,6 +85,21 @@ void TrainState::Update(float dt) {
 	}
 
 	m_SaveStatusTimer = std::max(m_SaveStatusTimer - dt, 0.0f);
+
+	for (auto& c : m_BlinkConnection) {
+		if (c.first > 0.0f) {
+			c.first -= dt;
+		}
+		else if (rand() % 100 == 0) {
+			c.first = 7.0f;
+			c.second = {
+				static_cast<unsigned char>(GetRandomValue(0, 255)),
+				static_cast<unsigned char>(GetRandomValue(0, 255)),
+				static_cast<unsigned char>(GetRandomValue(0, 255)),
+				255
+			};
+		}
+	}
 }
 
 void TrainState::Render() {
@@ -82,6 +142,33 @@ void TrainState::RenderUI() {
 	if (m_SaveStatusTimer > 0.0f) {
 		DrawText("Saved", uiArea.x + 20, 125, 10, BLUE);
 	}
+
+	DrawRectangleRec(nnArea, Fade(DARKGRAY, 0.1f));
+	DrawRectangleLinesEx(nnArea, 1, Fade(DARKGRAY, 0.3f));
+
+	int connectionID = -1;
+	for (int r = 0; r < m_NodePositions.size() - 1; r++) {
+		for (size_t i = 0; i < m_NodePositions[r].size(); i++) {
+			for (size_t j = 0; j < m_NodePositions[r + 1].size(); j++) {
+				connectionID++;
+				if (m_BlinkConnection[connectionID].first < 6.5f) {
+					DrawLineEx(m_NodePositions[r][i], m_NodePositions[r + 1][j], 1.5f, BLUE);
+				}
+				else {
+					DrawLineEx(m_NodePositions[r][i], m_NodePositions[r + 1][j], 3.5f, 
+						m_BlinkConnection[connectionID].second);
+				}
+			}
+		}
+	}
+
+	for (int r = 0; r < m_NodePositions.size(); r++) {
+		for (size_t n = 0; n < m_NodePositions[r].size(); n++) {
+			Vector2 pos = m_NodePositions[r][n];
+			DrawCircleV(pos, 8.0f, DARKBLUE);
+		}
+	}
+
 }
 
 void TrainState::Reset() {
