@@ -2,10 +2,10 @@
 
 #include "game/state/StateInclude.h"
 
-Application::Application(int screenWidth, int screenHeight, const char* title)
-	: m_ScreenWidth(screenWidth), m_ScreenHeight(screenHeight)
+Application::Application()
 {
-	InitWindow(m_ScreenWidth, m_ScreenHeight, title);
+	SetConfigFlags(FLAG_WINDOW_RESIZABLE);
+	InitWindow(m_SimArea.width + m_UIArea.width, m_SimArea.height, "AI learn to drive");
 	SetTargetFPS(60);
 
 	RegistryState(StateType::Train, std::make_unique<TrainState>(&m_Track, *this));
@@ -13,7 +13,7 @@ Application::Application(int screenWidth, int screenHeight, const char* title)
 	RegistryState(StateType::Demo,  std::make_unique<DemoState>(&m_Track, *this));
 	SetState(StateType::Train);
 
-	m_Track.Load("app/train/tracks/track_1"); // Default track
+	m_Track.Load("track"); // Default track
 }
 
 Application::~Application() {

@@ -20,7 +20,7 @@ enum class EditMode {
 class Application
 {
 public:
-	Application(int screenWidth = 1280, int screenHeight = 960, const char* title = "title");
+	Application();
 	~Application();
 
 	void Run();
@@ -30,13 +30,15 @@ public:
 
 	Vector2 GetMousePos() const { return m_MousePos; }
 	void SetState(StateType type);
+	Rectangle GetSimArea() const { return m_SimArea; }
+	Rectangle GetUIArea() const { return m_UIArea; }
 
 private:
 	void RegistryState(StateType type, std::unique_ptr<State> state);
 
 private:
-	const int m_ScreenWidth;
-	const int m_ScreenHeight;
+	Rectangle m_SimArea = { 0, 0, 1280, 960 };
+	Rectangle m_UIArea = { 1280, 0, 400, 960 };
 
 	Vector2 m_MousePos = { 0.0f, 0.0f };
 	Track m_Track;

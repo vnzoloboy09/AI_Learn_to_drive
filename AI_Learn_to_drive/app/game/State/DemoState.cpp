@@ -31,7 +31,10 @@ void DemoState::Update(float dt) {
 	m_Car.Update(dt, *m_Track);
 }
 
-void DemoState::Render() const {
+void DemoState::Render() {
+	Rectangle simArea = m_App.GetSimArea();
+	BeginScissorMode(static_cast<int>(simArea.x), static_cast<int>(simArea.y),
+		static_cast<int>(simArea.width), static_cast<int>(simArea.height));
 	m_Track->Render();
 	m_Car.Render();
 
@@ -39,6 +42,13 @@ void DemoState::Render() const {
 	DrawText("D: Demo", 1050, 40, 20, GRAY);
 	DrawText("R: Reset", 1050, 70, 20, GRAY);
 	DrawText("H: Toggle checkpoint", 1050, 100, 20, m_Track->ShowingCheckpoints() ? GREEN : GRAY);
+	EndScissorMode();
+
+	RenderUI();
+}
+
+void DemoState::RenderUI() {
+
 }
 
 void DemoState::Reset() {

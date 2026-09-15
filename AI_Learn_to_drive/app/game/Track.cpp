@@ -13,7 +13,7 @@ Track::~Track() {
 }
 
 void Track::Save(const std::string& filepath) const {
-    std::ofstream outFile(filepath, std::ios::binary);
+    std::ofstream outFile("app/train/tracks/" + filepath, std::ios::binary);
     if (!outFile.is_open()) {
         TraceLog(LOG_ERROR, "Failed to open file for writing: %s", filepath.c_str());
         return;
@@ -43,10 +43,15 @@ void Track::Save(const std::string& filepath) const {
 }
 
 void Track::Load(const std::string& filepath) {
-    std::ifstream inFile(filepath, std::ios::binary);
+    std::ifstream inFile("app/train/tracks/" + filepath, std::ios::binary);
     if (!inFile.is_open()) {
-        TraceLog(LOG_ERROR, "Failed to open file for reading: %s", filepath.c_str());
-        return;
+        TraceLog(LOG_WARNING, "Failed to open file for reading: %s", filepath.c_str());
+        inFile.open("app/game/default_setting/track", std::ios::binary);
+
+        if (!inFile.is_open()) {
+            TraceLog(LOG_ERROR, "Failed to open default file");
+            return;
+        }
     }
 
     size_t cpCount = 0;
@@ -64,10 +69,8 @@ void Track::Load(const std::string& filepath) {
         std::vector<unsigned char> fileBuffer(fileSize);
         inFile.read(reinterpret_cast<char*>(fileBuffer.data()), fileSize);
 
-        UnloadImage(trackImage);
+        Unload();
         trackImage = LoadImageFromMemory(".png", fileBuffer.data(), fileSize);
-
-        UnloadTexture(trackTexture);
         trackTexture = LoadTextureFromImage(trackImage);
 
         TraceLog(LOG_INFO, "Loaded track and %zu checkpoints from single file.", checkpoints.size());

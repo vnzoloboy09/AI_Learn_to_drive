@@ -51,7 +51,10 @@ void TrainState::Update(float dt) {
 	}
 }
 
-void TrainState::Render() const {
+void TrainState::Render() {
+	Rectangle simArea = m_App.GetSimArea();
+	BeginScissorMode(static_cast<int>(simArea.x), static_cast<int>(simArea.y),
+		static_cast<int>(simArea.width), static_cast<int>(simArea.height));
 	m_Track->Render();
 	for (auto& car : m_Cars) {
 		car.Render();
@@ -65,6 +68,11 @@ void TrainState::Render() const {
 	DrawText("E: Edit", 1050, 10, 20, GRAY);
 	DrawText("D: Demo", 1050, 40, 20, GRAY);
 	DrawText("H: Toggle checkpoint", 1050, 70, 20, m_Track->ShowingCheckpoints() ? GREEN : GRAY);
+	EndScissorMode();
+}
+
+void TrainState::RenderUI() {
+
 }
 
 void TrainState::Reset() {
