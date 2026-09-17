@@ -81,6 +81,10 @@ void TrainState::HandleInput() {
 	if (IsKeyPressed(KEY_M)) {
 		m_App.SetState(StateType::Demo);
 	}
+	if (IsKeyDown(KEY_LEFT_CONTROL) && IsKeyPressed(KEY_S)) {
+		m_Ga.SavePopulation("app/train/cars", m_GenerationCount, m_Cars);
+		m_SaveStatusTimer = 3.0f;
+	}
 
 	if (mousePos.x < m_App.GetSimArea().width && mousePos.y < m_App.GetSimArea().height &&
 		(IsMouseButtonPressed(MOUSE_BUTTON_RIGHT) ||
@@ -175,7 +179,7 @@ void TrainState::RenderUI() {
 	if (GuiButton({ uiArea.x + 210, 40, 170, 35 }, "Watch Demo [M]")) {
 		m_App.SetState(StateType::Demo);
 	}
-	if (GuiButton({ uiArea.x + 20, 85, 170, 35 }, "Save population")) {
+	if (GuiButton({ uiArea.x + 20, 85, 170, 35 }, "Save population [C-S]")) {
 		m_Ga.SavePopulation("app/train/cars", m_GenerationCount, m_Cars);
 		m_SaveStatusTimer = 3.0f;
 	}
