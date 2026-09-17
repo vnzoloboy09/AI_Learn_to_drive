@@ -2,6 +2,11 @@
 
 #include <algorithm>
 #include <fstream>
+#include <random>
+
+static std::random_device rd;
+static std::mt19937 gen(rd());
+const float WEIGHT_LIMIT = 4.0f;
 
 Genetic::Genetic(float mutationRate, float mutationStrength, size_t elitismCount)
 	: m_MutationRate(mutationRate), m_MutationStrength(mutationStrength), m_ElitismCount(elitismCount)
@@ -10,7 +15,7 @@ Genetic::Genetic(float mutationRate, float mutationStrength, size_t elitismCount
 float Genetic::Evolve(std::vector<Car>& population, Vector2 spawnPoint, float spawnAngle) {
 	float best = 0.0f;
 	std::sort(population.begin(), population.end(), 
-		[](Car A, Car B) {
+		[](const Car& A, const Car& B) {
 			return A.GetFitness() > B.GetFitness();
 		});
 	best = population[0].GetFitness();
@@ -31,7 +36,7 @@ float Genetic::Evolve(std::vector<Car>& population, Vector2 spawnPoint, float sp
 		Network childBrain = Crossover(parentA, parentB);
 		Mutate(childBrain);
 
-		Car childCar(false);
+		Car childCar(nextGen.size() - 1);
 		childCar.SetBrain(childBrain);
 		childCar.Reset(spawnPoint, spawnAngle);
 		nextGen.push_back(childCar);
@@ -43,11 +48,12 @@ float Genetic::Evolve(std::vector<Car>& population, Vector2 spawnPoint, float sp
 
 Network Genetic::TournamentSelection(const std::vector<Car>& population) {
 	size_t tournamentSize = 5;
-	size_t bestIndex = rand() % population.size();
+	std::uniform_int_distribution<size_t> dist(0, population.size() - 1);
+	size_t bestIndex = dist(gen);
 	float bestFitness = population[bestIndex].GetFitness();
 
 	for (size_t i = 0; i < tournamentSize; i++) {
-		size_t id = rand() % population.size();
+		size_t id = dist(gen);
 		if (population[id].GetFitness() > bestFitness) {
 			bestFitness = population[id].GetFitness();
 			bestIndex = id;
@@ -58,17 +64,18 @@ Network Genetic::TournamentSelection(const std::vector<Car>& population) {
 }
 
 Network Genetic::Crossover(const Network& ParentA, const Network& parentB) {
+	std::uniform_real_distribution<float> chance(0.0f, 1.0f);
 	Network child = ParentA;
 
 	for (size_t i = 0; i < child.m_Layers.size(); i++) {
 		for (size_t j = 0; j < child.m_Layers[i].biases.size(); j++) {
-			if ((rand() % 100) < 50) {
+			if (chance(gen) > 0.5f) {
 				child.m_Layers[i].biases[j] = parentB.m_Layers[i].biases[j];
 			}
 		}
 
 		for (size_t j = 0; j < child.m_Layers[i].weights.size(); j++) {
-			if ((rand() % 100) < 50) {
+			if (chance(gen) > 0.5f) {
 				child.m_Layers[i].weights[j] = parentB.m_Layers[i].weights[j];
 			}
 		}
@@ -78,22 +85,23 @@ Network Genetic::Crossover(const Network& ParentA, const Network& parentB) {
 }
 
 void Genetic::Mutate(Network& net) {
+	std::uniform_real_distribution<float> chance(0.0f, 1.0f);
+	std::normal_distribution<float> gaussian(0.0f, m_MutationStrength);
+
 	auto& layers = net.m_Layers;
 
 	for (size_t i = 0; i < layers.size(); i++) {
 		for (size_t j = 0; j < layers[i].biases.size(); j++) {
-			float chance = static_cast<float>(rand()) / RAND_MAX;
-			if (chance < m_MutationRate) {
-				float mutation = ((static_cast<float>(rand()) / RAND_MAX) * 2.0f - 1.0f) * m_MutationStrength;
-				layers[i].biases[j] += mutation;
+			if (chance(gen) < m_MutationRate) {
+				layers[i].biases[j] += gaussian(gen);
+				layers[i].biases[j] = std::clamp(layers[i].biases[j], -WEIGHT_LIMIT, WEIGHT_LIMIT);
 			}
 		}
 
 		for (size_t j = 0; j < layers[i].weights.size(); j++) {
-			float chance = static_cast<float>(rand()) / RAND_MAX;
-			if (chance < m_MutationRate) {
-				float mutation = ((static_cast<float>(rand()) / RAND_MAX) * 2.0f - 1.0f) * m_MutationStrength;
-				layers[i].weights[j] += mutation;
+			if (chance(gen) < m_MutationRate) {
+				layers[i].weights[j] += gaussian(gen);
+				layers[i].weights[j] = std::clamp(layers[i].weights[j], -WEIGHT_LIMIT, WEIGHT_LIMIT);
 			}
 		}
 	}
@@ -108,7 +116,7 @@ void Genetic::SavePopulation(const std::string& filepath, size_t currentGenerati
 	}
 
 	std::sort(population.begin(), population.end(),
-		[](Car A, Car B) {
+		[](const Car& A, const Car& B) {
 			return A.GetFitness() > B.GetFitness();
 		});
 
@@ -134,12 +142,12 @@ bool Genetic::LoadPopulation(const std::string& filepath, size_t& outGeneration,
 	population.clear();
 	population.reserve(popSize);
 
-	for (size_t i = 0; i < popSize; ++i) {
+	for (int i = 0; i < popSize; i++) {
 		std::string path = filepath + "/car_" + std::to_string(i) + ".txt";
 
 		Network loadedBrain(path.c_str());
 
-		Car car(false);
+		Car car(i);
 		car.SetBrain(loadedBrain);
 		car.Reset(spawnPos, spawnAngle);
 		population.push_back(car);

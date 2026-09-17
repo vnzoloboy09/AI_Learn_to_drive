@@ -1,7 +1,7 @@
 #include "Utils.h"
 
 float CastRay(Vector2 carPos, float rayAngle, float maxRange, Track& track) {
-    float stepSize = 4.0f;
+    float stepSize = 2.0f;
     float currentDistance = 0.0f;
 
     while (currentDistance < maxRange) {
