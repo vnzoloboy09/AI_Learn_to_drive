@@ -22,6 +22,19 @@ void EditState::HandleInput() {
 	Vector2 mousePos = m_App.GetMousePos();
 	Rectangle simArea = m_App.GetSimArea();;
 
+	if (IsKeyPressed(KEY_T)) {
+		m_App.SetState(StateType::Train);
+	}
+	if (IsKeyPressed(KEY_M)) {
+		m_App.SetState(StateType::Demo);
+	}
+	if (IsKeyPressed(KEY_ONE)) {
+		m_Mode = Mode::EditCheckpoint;
+	}
+	if (IsKeyPressed(KEY_TWO)) {
+		m_Mode = Mode::EditTrack;
+	}
+
 	textBoxBounds = { m_App.GetUIArea().x + 20, 130, 360, 30 };
 	if (GuiTextBox(textBoxBounds, m_TextBuffer, 128, m_TextBoxEditing)) {
 		m_TextBoxEditing = !m_TextBoxEditing;
@@ -113,10 +126,10 @@ void EditState::RenderUI() {
 
 	// ================== Change State =========================
 
-	if (GuiButton({ uiArea.x + 20, 40, 170, 35 }, "Train")) {
+	if (GuiButton({ uiArea.x + 20, 40, 170, 35 }, "Train [T]")) {
 		m_App.SetState(StateType::Train);
 	}
-	if (GuiButton({ uiArea.x + 210, 40, 170, 35 }, "Watch Demo")) {
+	if (GuiButton({ uiArea.x + 210, 40, 170, 35 }, "Watch Demo [M]")) {
 		m_App.SetState(StateType::Demo);
 	}
 
@@ -149,20 +162,20 @@ void EditState::RenderUI() {
 	// =============== Mode Button ======================
 	GuiSetState(STATE_PRESSED);
 	if (m_Mode == Mode::EditCheckpoint) {
-		if (GuiButton({ uiArea.x + 20, 230, 170, 30 }, "Edit checkpoint")) {
+		if (GuiButton({ uiArea.x + 20, 230, 170, 30 }, "Edit checkpoint [1]")) {
 			m_Mode = Mode::EditCheckpoint;
 		}
 		GuiSetState(STATE_NORMAL);
-		if (GuiButton({ uiArea.x + 210, 230, 170, 30 }, "Edit track")) {
+		if (GuiButton({ uiArea.x + 210, 230, 170, 30 }, "Edit track [2]")) {
 			m_Mode = Mode::EditTrack;
 		}
 	}
 	else {
-		if (GuiButton({ uiArea.x + 210, 230, 170, 30 }, "Edit track")) {
+		if (GuiButton({ uiArea.x + 210, 230, 170, 30 }, "Edit track [2]")) {
 			m_Mode = Mode::EditTrack;
 		}
 		GuiSetState(STATE_NORMAL);
-		if (GuiButton({ uiArea.x + 20, 230, 170, 30 }, "Edit checkpoint")) {
+		if (GuiButton({ uiArea.x + 20, 230, 170, 30 }, "Edit checkpoint [1]")) {
 			m_Mode = Mode::EditCheckpoint;
 		}
 	}
