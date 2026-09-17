@@ -4,24 +4,24 @@
 #include "app/model/Network.h"
 #include "Utils.h"
 
-const float TURN_RATE = 2.5f;
-const float ACCELERATION_RATE = 380.0f;
-const float MAX_FORWARD_SPEED = 220.0f;
-const float MAX_REVERSE_SPEED = -80.0f;
-const float FRICTION = 0.93f;
+const float TURN_RATE = 3.0f;
+const float ACCELERATION_RATE = 300.0f;
+const float MAX_FORWARD_SPEED = 250.0f;
+const float FRICTION = 0.97f;
 const float CAR_WIDTH = 30.0f;
 const float CAR_HEIGHT = 16.0f;
 const Vector2 START_POSITION = { 170, 470 };
 const float START_ANGLE = DegreeToRadian(-90);
-const float MAX_RAY_RANGE = 150.0f;
+const float MAX_RAY_RANGE = 200.0f;
 const float TIME_OUT = 6.0f;
+const float FIXED_DT = 1.0f / 60.0f;
 
 class Track;
 
 class Car
 {
 public:
-	Car(bool isManual = false);
+	Car(int id, bool isManual = false);
 	~Car();
 
 	void Update(float dt, Track& track);
@@ -41,8 +41,9 @@ public:
 	Network GetBrain() const { return m_Brain; }
 	void SetBrain(Network brain) { m_Brain = brain; }
 	void SetDemo(bool demoing) { m_Demoing = demoing; }
-
-	float GetDistanceTravel() const { return m_DistanceTravel; }
+	int GetID() const { return m_ID; }
+	void SetColor(Color color) { m_Color = color; }
+	Color GetColor() const { return m_Color; }
 
 private:
 	void HandleInput();
@@ -52,25 +53,26 @@ private:
 	void CheckBounds(Track& track);
 	void UpdateRay(Track& track);
 
-private:
-	Network m_Brain = Network({ 5, 10, 10, 2 });
+public:
+	Network m_Brain;
 	Vector2 m_Position = START_POSITION;
 	float m_Angle = START_ANGLE;
 	float m_Speed = 0.0f;
 	bool m_IsAlive = true;
 	float m_Fitness = 0.0f;
 	bool m_IsManual;
+	int m_ID = 0;
+	Color m_Color = GREEN;
 
 	float m_Steering = 0.0f;
 	float m_Acceleration = 0.0f;
 
-	float m_DistanceTravel = 0.0f;
-	size_t m_TargetCheckpoint = 0;
+	size_t m_TargetCheckpointID = 0;
 	size_t m_LapFinished = 0;
+	float m_DisToTargetCheckPoint = 0.0f;
 	float m_CheckpointTimer = 0.0f;
 
 	bool m_Demoing = false;
-	bool m_IsInCheckpoint = false;
 
 	std::vector<Vector2> m_RayEnds;
 };

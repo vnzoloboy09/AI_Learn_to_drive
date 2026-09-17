@@ -13,8 +13,11 @@ public:
 
 	void HandleInput() override;
 	void Update(float dt) override;
-	void Render() const override;
+	void Render() override;
+	void RenderUI() override;
 	void Reset() override;
+
+	void ResetCar();
 
 private:
 	Car m_Car;

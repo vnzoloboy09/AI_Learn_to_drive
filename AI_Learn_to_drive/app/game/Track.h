@@ -30,6 +30,6 @@ public:
 	Image trackImage;
 
 private:
-	bool m_ShowCheckpoints;
+	bool m_ShowCheckpoints = true;
 };
 

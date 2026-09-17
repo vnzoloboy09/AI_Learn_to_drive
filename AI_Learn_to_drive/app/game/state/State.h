@@ -13,7 +13,8 @@ public:
 
 	virtual void HandleInput() = 0;
 	virtual void Update(float dt) = 0;
-	virtual void Render() const = 0;
+	virtual void Render() = 0;
+	virtual void RenderUI() = 0;
 	virtual void Reset() = 0;
 public:
 	enum {
