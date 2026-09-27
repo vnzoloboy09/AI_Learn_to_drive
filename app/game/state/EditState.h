@@ -42,7 +42,7 @@ private:
 	float m_ListStatusTimer = 0.0f;
 	int m_ListActive = -1;
 	int m_ListScrollIndex = 0;
-	FilePathList m_Files;
+	FilePathList m_Files{};
 	std::string m_FileListString = "";
 	std::string m_CurrentLoadedFile = "";
 

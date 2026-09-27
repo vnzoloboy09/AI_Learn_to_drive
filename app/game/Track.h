@@ -26,8 +26,8 @@ public:
 
 public:
 	std::vector<Vector2> checkpoints;
-	Texture2D trackTexture;
-	Image trackImage;
+	Texture2D trackTexture{};
+	Image trackImage{};
 
 private:
 	bool m_ShowCheckpoints = true;

@@ -1,6 +1,7 @@
 #include "Application.h"
 
 #include "game/state/StateInclude.h"
+#include <iostream>
 
 Application::Application()
 {
@@ -8,12 +9,13 @@ Application::Application()
 	InitWindow(m_SimArea.width + m_UIArea.width, m_SimArea.height, "AI learn to drive");
 	SetTargetFPS(60);
 
-	RegistryState(StateType::Train, std::make_unique<TrainState>(&m_Track, *this));
-	RegistryState(StateType::Edit,  std::make_unique<EditState>(&m_Track, *this));
-	RegistryState(StateType::Demo,  std::make_unique<DemoState>(&m_Track, *this));
-	SetState(StateType::Train);
+    RegistryState(StateType::Train, std::make_unique<TrainState>(&m_Track, *this));
+    RegistryState(StateType::Edit, std::make_unique<EditState>(&m_Track, *this));
+    RegistryState(StateType::Demo, std::make_unique<DemoState>(&m_Track, *this));
+    SetState(StateType::Train);
 
-	m_Track.Load("track"); // Default track
+    m_Track.Load("track");
+    std::cout << "DEBUG: track loaded\n"; // Default track
 }
 
 Application::~Application() {

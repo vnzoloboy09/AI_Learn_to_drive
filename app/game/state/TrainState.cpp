@@ -275,10 +275,10 @@ void TrainState::RenderSelectedCar() {
 	static float speed = 0.0f;
 	static float angle = 0.0f;
 	static Vector2 position;
-	int centerX = m_App.GetUIArea().x + 200;
-	int centerY = 300;
-	int width = CAR_WIDTH * 3;
-	int height = CAR_HEIGHT * 3;
+	float centerX = m_App.GetUIArea().x + 200;
+	float centerY = 300;
+	float width = CAR_WIDTH * 3;
+	float height = CAR_HEIGHT * 3;
 	Rectangle rect = { centerX, centerY, width, height };
 	Vector2 origin = { width / 2, height / 2 };
 
