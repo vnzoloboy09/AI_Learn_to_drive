@@ -47,44 +47,51 @@ void Track::Load(const std::string& filepath) {
     if (!inFile.is_open()) {
         TraceLog(LOG_WARNING, "Failed to open file for reading: %s", filepath.c_str());
         inFile.open("app/game/default_setting/track", std::ios::binary);
-
         if (!inFile.is_open()) {
             TraceLog(LOG_ERROR, "Failed to open default file");
             return;
         }
     }
-
+    
     size_t cpCount = 0;
     inFile.read(reinterpret_cast<char*>(&cpCount), sizeof(cpCount));
-
+    
     checkpoints.resize(cpCount);
     if (cpCount > 0) {
         inFile.read(reinterpret_cast<char*>(checkpoints.data()), cpCount * sizeof(Vector2));
     }
-
+    
     int fileSize = 0;
     inFile.read(reinterpret_cast<char*>(&fileSize), sizeof(fileSize));
-
+    
     if (fileSize > 0) {
         std::vector<unsigned char> fileBuffer(fileSize);
         inFile.read(reinterpret_cast<char*>(fileBuffer.data()), fileSize);
-
+        
         Unload();
         trackImage = LoadImageFromMemory(".png", fileBuffer.data(), fileSize);
         trackTexture = LoadTextureFromImage(trackImage);
-
+        
         TraceLog(LOG_INFO, "Loaded track and %zu checkpoints from single file.", checkpoints.size());
     }
     else {
         TraceLog(LOG_ERROR, "Invalid or empty image data in file!");
     }
-
+    
     inFile.close();
+    TraceLog(LOG_INFO, "OKe");
 }
 
 void Track::Unload() {
-    UnloadTexture(trackTexture);
-    UnloadImage(trackImage);
+    if (trackTexture.id != 0) {
+        UnloadTexture(trackTexture);
+        trackTexture = {};
+    }
+
+    if (trackImage.data != nullptr) {
+        UnloadImage(trackImage);
+        trackImage = {};
+    }
 }
 
 bool Track::IsWall(float x, float y) const {

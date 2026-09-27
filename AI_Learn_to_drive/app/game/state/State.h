@@ -9,7 +9,7 @@ enum class StateType {
 class State {
 public:
 	State() = default;
-	~State() = default;
+	virtual ~State() = default;
 
 	virtual void HandleInput() = 0;
 	virtual void Update(float dt) = 0;
@@ -32,5 +32,4 @@ public:
 
 protected:
 	Track* m_Track;
-
 };

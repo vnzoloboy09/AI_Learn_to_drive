@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <cfloat>
 
 #include "State.h"
 #include "app/game/Car.h"
