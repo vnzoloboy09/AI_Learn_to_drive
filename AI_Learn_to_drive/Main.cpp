@@ -1,11 +1,11 @@
-#define RAYGUI_IMPLEMENTATION
-#include <raygui.h>
+#define RAYGUI_IMPLEMENTATION 
 #include "app/Application.h"
+#include <raygui.h>
 
-int main()
-{
-	Application app;
-	app.Run();
+int main() {
+    Application app;
 
-	return 0;
+    app.Run();
+
+    return 0;
 }

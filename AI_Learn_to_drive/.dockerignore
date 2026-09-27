@@ -1,0 +1,11 @@
+.git
+.gitignore
+
+build/
+out/
+.vscode/
+.idea/
+
+*.sln
+*.vcxproj
+*.vcxproj.filters
